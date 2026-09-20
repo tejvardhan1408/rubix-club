@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}News | Rubix Club{% endblock %}
+{% block content %}
+<section class="news-page" style="max-width:1200px;margin:0 auto;padding:70px 24px;color:#fff">
+  <div style="text-align:center;margin-bottom:42px"><p style="color:#22d3ee;letter-spacing:3px;font-weight:800">RUBIX CLUB UPDATES</p><h1 style="font-size:clamp(2.2rem,5vw,4rem);margin:12px 0">Latest <span style="color:#a78bfa">News</span></h1><p style="color:#9ca3af">Announcements, achievements and moments from Rubix Club.</p></div>
+  {% if articles %}<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px">
+  {% for item in articles %}<article style="overflow:hidden;border:1px solid #26304b;border-radius:18px;background:#0d1328">
+    {% if item.image %}<img src="{{ item.image }}" alt="{{ item.title }}" style="width:100%;height:210px;object-fit:cover">{% endif %}
+    <div style="padding:24px"><small style="color:#22d3ee">{{ (item.published_at or item.created_at).strftime('%d %b %Y') if (item.published_at or item.created_at) else 'RUBIX NEWS' }}</small><h2 style="margin:12px 0;font-size:1.35rem">{{ item.title }}</h2><p style="color:#aab3c8;line-height:1.7">{{ item.summary }}</p><a href="{{ url_for('news_details', news_id=item.id) }}" style="display:inline-block;margin-top:18px;color:#67e8f9;font-weight:700;text-decoration:none">Read article →</a></div>
+  </article>{% endfor %}</div>{% else %}<div style="padding:45px;text-align:center;border:1px solid #26304b;border-radius:18px;background:#0d1328"><h2>No news published yet</h2><p style="color:#9ca3af;margin-top:10px">Check back soon for Rubix Club updates.</p></div>{% endif %}
+</section>
+{% endblock %}

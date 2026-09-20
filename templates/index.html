@@ -1,0 +1,1708 @@
+{% extends "base.html" %}
+
+{% block title %}RUBIX | Think. Solve. Conquer.{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   RUBIX HOME PAGE
+   ========================================================= */
+
+:root {
+    --rbx-bg: #05070b;
+    --rbx-card: #0b0f16;
+    --rbx-border: rgba(255,255,255,0.08);
+    --rbx-text: #f5f7fa;
+    --rbx-muted: #8d96a8;
+    --rbx-accent: #00e5ff;
+    --rbx-purple: #8b5cf6;
+}
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+.rbx-home {
+    background: var(--rbx-bg);
+    color: var(--rbx-text);
+    overflow: hidden;
+}
+
+.rbx-home * {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.rbx-hero {
+    min-height: 88vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 20px 80px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(0,229,255,0.09),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(139,92,246,0.08),
+            transparent 30%
+        ),
+        #05070b;
+}
+
+
+/* GRID BACKGROUND */
+
+.rbx-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.035) 1px,
+            transparent 1px
+        );
+
+    background-size: 60px 60px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent
+    );
+}
+
+
+/* GLOW */
+
+.rbx-hero::after {
+    content: "";
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(0,229,255,0.08);
+
+    box-shadow:
+        0 0 100px rgba(0,229,255,0.08),
+        inset 0 0 100px rgba(139,92,246,0.05);
+
+    animation: rbxPulse 5s ease-in-out infinite;
+}
+
+
+@keyframes rbxPulse {
+
+    0%,100% {
+        transform: scale(0.95);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+}
+
+
+.rbx-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 950px;
+}
+
+
+.rbx-kicker {
+    display: inline-block;
+
+    padding: 8px 16px;
+
+    border: 1px solid rgba(0,229,255,0.25);
+    border-radius: 50px;
+
+    color: var(--rbx-accent);
+
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+
+    margin-bottom: 25px;
+
+    background: rgba(0,229,255,0.04);
+}
+
+
+.rbx-hero h1 {
+
+    margin: 0;
+
+    font-size: clamp(55px, 11vw, 150px);
+
+    line-height: 0.85;
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 15%,
+            #00e5ff 50%,
+            #8b5cf6 85%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+
+}
+
+
+.rbx-hero-subtitle {
+
+    margin-top: 30px;
+
+    font-size: clamp(17px, 2vw, 23px);
+
+    color: #c4cad5;
+
+    letter-spacing: 2px;
+}
+
+
+.rbx-hero-description {
+
+    max-width: 650px;
+
+    margin: 20px auto 0;
+
+    color: var(--rbx-muted);
+
+    line-height: 1.8;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.rbx-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-top: 35px;
+
+    flex-wrap: wrap;
+}
+
+
+.rbx-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px 25px;
+
+    border-radius: 50px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    transition: 0.3s ease;
+
+}
+
+
+.rbx-btn-primary {
+
+    color: #001014;
+
+    background: var(--rbx-accent);
+
+    box-shadow:
+        0 0 30px rgba(0,229,255,0.2);
+}
+
+
+.rbx-btn-primary:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 0 40px rgba(0,229,255,0.4);
+}
+
+
+.rbx-btn-secondary {
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    background: rgba(255,255,255,0.03);
+
+}
+
+
+.rbx-btn-secondary:hover {
+
+    transform: translateY(-3px);
+
+    border-color: rgba(255,255,255,0.35);
+
+}
+
+
+/* =========================================================
+   MARQUEE
+   ========================================================= */
+
+.rbx-marquee {
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-top: 1px solid var(--rbx-border);
+    border-bottom: 1px solid var(--rbx-border);
+
+    background: rgba(255,255,255,0.015);
+
+}
+
+
+.rbx-marquee-track {
+
+    display: flex;
+
+    width: max-content;
+
+    animation: rbxMarquee 25s linear infinite;
+}
+
+
+.rbx-marquee-item {
+
+    padding: 17px 30px;
+
+    white-space: nowrap;
+
+    font-size: 11px;
+
+    letter-spacing: 4px;
+
+    color: #7e8796;
+
+}
+
+
+.rbx-marquee-item strong {
+
+    color: var(--rbx-accent);
+
+}
+
+
+@keyframes rbxMarquee {
+
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+
+}
+
+
+/* =========================================================
+   COMMON SECTION
+   ========================================================= */
+
+.rbx-section {
+
+    max-width: 1250px;
+
+    margin: auto;
+
+    padding: 110px 25px;
+}
+
+
+.rbx-section-label {
+
+    color: var(--rbx-accent);
+
+    font-size: 11px;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 15px;
+}
+
+
+.rbx-section-title {
+
+    font-size: clamp(35px, 5vw, 65px);
+
+    line-height: 1;
+
+    margin: 0;
+
+    letter-spacing: -2px;
+
+}
+
+
+.rbx-section-description {
+
+    max-width: 650px;
+
+    color: var(--rbx-muted);
+
+    line-height: 1.8;
+
+    margin-top: 20px;
+
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.rbx-intro {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+
+.rbx-intro-box {
+
+    padding: 35px;
+
+    border: 1px solid var(--rbx-border);
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.04),
+            rgba(255,255,255,0.01)
+        );
+
+}
+
+
+.rbx-intro-box h3 {
+
+    margin-top: 0;
+
+    font-size: 24px;
+
+}
+
+
+.rbx-intro-box p {
+
+    color: var(--rbx-muted);
+
+    line-height: 1.8;
+
+}
+
+
+/* =========================================================
+   PHOTO SECTION
+   ========================================================= */
+
+.rbx-photo-header {
+
+    display: flex;
+
+    align-items: end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 40px;
+
+}
+
+
+/* =========================================================
+   3 PHOTO PREMIUM GRID
+   ========================================================= */
+
+.rbx-photo-grid {
+
+    display: grid;
+
+    grid-template-columns: 1.35fr 0.65fr;
+
+    grid-template-rows: 280px 280px;
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+
+.rbx-photo-card {
+
+    position: relative;
+
+    display: block;
+
+    overflow: hidden;
+
+    border-radius: 26px;
+
+    background: #0b0f16;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    text-decoration: none;
+
+    isolation: isolate;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.35);
+
+}
+
+
+.rbx-photo-card img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition:
+        transform 0.8s ease,
+        filter 0.8s ease;
+
+}
+
+
+.rbx-photo-card:hover img {
+
+    transform: scale(1.08);
+
+    filter: brightness(1.08);
+}
+
+
+/* FIRST LARGE PHOTO */
+
+.rbx-photo-large {
+
+    grid-row: 1 / 3;
+
+}
+
+
+/* OVERLAY */
+
+.rbx-photo-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,0.9),
+            rgba(0,0,0,0.15) 70%,
+            rgba(0,0,0,0.05)
+        );
+
+}
+
+
+/* PHOTO TEXT */
+
+.rbx-photo-content {
+
+    position: absolute;
+
+    left: 27px;
+
+    right: 20px;
+
+    bottom: 24px;
+
+    z-index: 2;
+
+    color: white;
+
+}
+
+
+.rbx-photo-content span {
+
+    display: block;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    color: var(--rbx-accent);
+
+    margin-bottom: 8px;
+
+}
+
+
+.rbx-photo-content h3 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+}
+
+
+.rbx-photo-content p {
+
+    margin: 7px 0 0;
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,0.65);
+
+}
+
+
+/* BORDER HOVER */
+
+.rbx-photo-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 26px;
+
+    border: 1px solid transparent;
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    transition: 0.4s ease;
+
+}
+
+
+.rbx-photo-card:hover::after {
+
+    border-color: rgba(0,229,255,0.35);
+
+}
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+.rbx-events-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
+
+    gap: 20px;
+
+    margin-bottom: 40px;
+
+}
+
+
+.rbx-event-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+}
+
+
+.rbx-event-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 420px;
+
+    border-radius: 24px;
+
+    border: 1px solid var(--rbx-border);
+
+    background: var(--rbx-card);
+
+    text-decoration: none;
+
+    color: white;
+
+    transition: 0.4s ease;
+
+}
+
+
+.rbx-event-card:hover {
+
+    transform: translateY(-8px);
+
+    border-color: rgba(0,229,255,0.25);
+
+}
+
+
+.rbx-event-image {
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+
+.rbx-event-content {
+
+    padding: 25px;
+
+}
+
+
+.rbx-event-category {
+
+    color: var(--rbx-accent);
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+}
+
+
+.rbx-event-title {
+
+    margin: 10px 0;
+
+    font-size: 22px;
+
+}
+
+
+.rbx-event-description {
+
+    color: var(--rbx-muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+}
+
+
+.rbx-event-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+}
+
+
+.rbx-event-meta span {
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    background: rgba(255,255,255,0.04);
+
+    color: #aeb6c5;
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================================
+   EXPERIENCE
+   ========================================================= */
+
+.rbx-experience-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 40px;
+
+}
+
+
+.rbx-experience-card {
+
+    padding: 35px;
+
+    min-height: 230px;
+
+    border-radius: 22px;
+
+    border: 1px solid var(--rbx-border);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.04),
+            rgba(255,255,255,0.01)
+        );
+
+    transition: 0.4s ease;
+
+}
+
+
+.rbx-experience-card:hover {
+
+    transform: translateY(-6px);
+
+    border-color: rgba(0,229,255,0.2);
+
+}
+
+
+.rbx-experience-number {
+
+    font-size: 13px;
+
+    color: var(--rbx-accent);
+
+    letter-spacing: 3px;
+
+}
+
+
+.rbx-experience-card h3 {
+
+    margin: 25px 0 12px;
+
+    font-size: 23px;
+
+}
+
+
+.rbx-experience-card p {
+
+    color: var(--rbx-muted);
+
+    line-height: 1.7;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   GALLERY CTA
+   ========================================================= */
+
+.rbx-gallery-cta {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 80px 45px;
+
+    border-radius: 30px;
+
+    text-align: center;
+
+    border: 1px solid var(--rbx-border);
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(0,229,255,0.1),
+            transparent 50%
+        ),
+        #0a0e15;
+
+}
+
+
+.rbx-gallery-cta h2 {
+
+    margin: 0;
+
+    font-size: clamp(35px, 5vw, 60px);
+
+}
+
+
+.rbx-gallery-cta p {
+
+    max-width: 600px;
+
+    margin: 20px auto 30px;
+
+    color: var(--rbx-muted);
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   FINAL CTA
+   ========================================================= */
+
+.rbx-final {
+
+    text-align: center;
+
+    padding-bottom: 130px;
+
+}
+
+
+.rbx-final h2 {
+
+    font-size: clamp(40px, 7vw, 90px);
+
+    margin: 0;
+
+    letter-spacing: -4px;
+
+}
+
+
+.rbx-final p {
+
+    color: var(--rbx-muted);
+
+    margin: 20px auto 30px;
+
+}
+
+
+/* =========================================================
+   SCROLL REVEAL
+   ========================================================= */
+
+.rbx-reveal {
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+
+}
+
+
+.rbx-reveal.rbx-visible {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .rbx-intro {
+
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+
+    }
+
+
+    .rbx-event-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .rbx-experience-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .rbx-hero {
+
+        min-height: 80vh;
+
+        padding-top: 80px;
+
+    }
+
+
+    .rbx-hero h1 {
+
+        letter-spacing: -3px;
+
+    }
+
+
+    .rbx-section {
+
+        padding: 75px 18px;
+
+    }
+
+
+    .rbx-photo-header,
+    .rbx-events-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    /* 3 PHOTOS STACK ON MOBILE */
+
+    .rbx-photo-grid {
+
+        grid-template-columns: 1fr;
+
+        grid-template-rows:
+            320px
+            230px
+            230px;
+
+    }
+
+
+    .rbx-photo-large {
+
+        grid-row: auto;
+
+    }
+
+
+    .rbx-photo-content h3 {
+
+        font-size: 21px;
+
+    }
+
+
+    .rbx-gallery-cta {
+
+        padding: 60px 25px;
+
+    }
+
+
+    .rbx-final h2 {
+
+        letter-spacing: -2px;
+
+    }
+
+}
+
+</style>
+
+
+<div class="rbx-home">
+
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+
+<section class="rbx-hero">
+
+    <div class="rbx-hero-content">
+
+        <div class="rbx-kicker">
+            CSE • RUBIX CLUB
+        </div>
+
+        <h1>RUBIX</h1>
+
+        <div class="rbx-hero-subtitle">
+            THINK. SOLVE. CONQUER.
+        </div>
+
+        <p class="rbx-hero-description">
+            A space where logic meets competition,
+            ideas become challenges, and students
+            come together to think beyond the obvious.
+        </p>
+
+        <div class="rbx-buttons">
+
+            <a
+                href="{{ url_for('events') }}"
+                class="rbx-btn rbx-btn-primary"
+            >
+                Explore Events
+            </a>
+
+            <a
+                href="#moments"
+                class="rbx-btn rbx-btn-secondary"
+            >
+                Explore Moments
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MARQUEE
+     ===================================================== -->
+
+<div class="rbx-marquee">
+
+    <div class="rbx-marquee-track">
+
+        <div class="rbx-marquee-item">
+            <strong>RUBIX</strong>
+            &nbsp; THINK
+        </div>
+
+        <div class="rbx-marquee-item">
+            SOLVE
+        </div>
+
+        <div class="rbx-marquee-item">
+            CONQUER
+        </div>
+
+        <div class="rbx-marquee-item">
+            <strong>APTITUDE</strong>
+        </div>
+
+        <div class="rbx-marquee-item">
+            LOGIC
+        </div>
+
+        <div class="rbx-marquee-item">
+            REASONING
+        </div>
+
+        <div class="rbx-marquee-item">
+            <strong>RUBIX</strong>
+            &nbsp; THINK
+        </div>
+
+        <div class="rbx-marquee-item">
+            SOLVE
+        </div>
+
+        <div class="rbx-marquee-item">
+            CONQUER
+        </div>
+
+        <div class="rbx-marquee-item">
+            <strong>APTITUDE</strong>
+        </div>
+
+        <div class="rbx-marquee-item">
+            LOGIC
+        </div>
+
+        <div class="rbx-marquee-item">
+            REASONING
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     INTRO
+     ===================================================== -->
+
+<section class="rbx-section rbx-reveal" id="about">
+
+    <div class="rbx-intro">
+
+        <div>
+
+            <div class="rbx-section-label">
+                About RUBIX
+            </div>
+
+            <h2 class="rbx-section-title">
+                WHERE<br>
+                THINKING<br>
+                BECOMES A GAME.
+            </h2>
+
+            <p class="rbx-section-description">
+                RUBIX is a CSE department club focused on
+                aptitude, reasoning, general knowledge,
+                problem solving and competitive thinking.
+            </p>
+
+        </div>
+
+
+        <div class="rbx-intro-box">
+
+            <h3>
+                Think differently.
+            </h3>
+
+            <p>
+                Every challenge is designed to test more
+                than memorization. RUBIX brings together
+                strategy, speed, logic and teamwork.
+            </p>
+
+            <p>
+                From competitive events to interactive
+                challenges, every round gives you another
+                reason to push your limits.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MOMENTS / 3 PHOTOS
+     ===================================================== -->
+
+<section
+    class="rbx-section rbx-reveal"
+    id="moments"
+>
+
+    <div class="rbx-photo-header">
+
+        <div>
+
+            <div class="rbx-section-label">
+                RUBIX Memories
+            </div>
+
+            <h2 class="rbx-section-title">
+                MOMENTS<br>
+                THAT MOVE.
+            </h2>
+
+        </div>
+
+        <a
+            href="{{ url_for('gallery') }}"
+            class="rbx-btn rbx-btn-secondary"
+        >
+            View Full Gallery →
+        </a>
+
+    </div>
+
+
+    <!-- =================================================
+         EXACTLY 3 PHOTOS
+         ================================================= -->
+
+   <div class="rbx-photo-grid">
+
+    {% if home_gallery %}
+
+        {% for photo in home_gallery[:3] %}
+
+        <a
+            href="{{ url_for('gallery') }}"
+            class="rbx-photo-card {% if loop.first %}rbx-photo-large{% endif %}"
+        >
+
+            <img
+                src="{{ photo['image'] }}"
+                alt="{{ photo['title'] or 'RUBIX Event Photo' }}"
+            >
+
+            <div class="rbx-photo-overlay"></div>
+
+            <div class="rbx-photo-content">
+
+                <span>
+                    0{{ loop.index }} / RUBIX MOMENT
+                </span>
+
+                <h3>
+                    {{ photo['title'] or 'RUBIX MOMENT' }}
+                </h3>
+
+                <p>
+                    {{ photo['description'] or 'Memories That Stay.' }}
+                </p>
+
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+    {% endif %}
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     UPCOMING EVENTS
+     ===================================================== -->
+
+<section class="rbx-section rbx-reveal">
+
+    <div class="rbx-events-header">
+
+        <div>
+
+            <div class="rbx-section-label">
+                What's Next
+            </div>
+
+            <h2 class="rbx-section-title">
+                UPCOMING<br>
+                EVENTS.
+            </h2>
+
+        </div>
+
+        <a
+            href="{{ url_for('events') }}"
+            class="rbx-btn rbx-btn-secondary"
+        >
+            All Events →
+        </a>
+
+    </div>
+
+
+    <div class="rbx-event-grid">
+
+        {% if home_events %}
+
+            {% for event in home_events %}
+
+            <a
+                href="{{ url_for('event_details', event_id=event['id']) }}"
+                class="rbx-event-card"
+            >
+
+                {% if event['image'] %}
+
+                <img
+                    src="{{ event['image'] }}"
+                    alt="{{ event['title'] }}"
+                    class="rbx-event-image"
+                >
+
+                {% else %}
+
+                <div
+                    class="rbx-event-image"
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:
+                        linear-gradient(
+                            135deg,
+                            #081018,
+                            #111827
+                        );
+                        color:#00e5ff;
+                        font-size:40px;
+                        font-weight:900;
+                    "
+                >
+                    R
+                </div>
+
+                {% endif %}
+
+
+                <div class="rbx-event-content">
+
+                    <div class="rbx-event-category">
+                        {{ event['category'] or 'RUBIX EVENT' }}
+                    </div>
+
+                    <h3 class="rbx-event-title">
+                        {{ event['title'] }}
+                    </h3>
+
+                    <p class="rbx-event-description">
+
+                        {{ event['description'] or
+                           'A competitive RUBIX challenge designed to test your thinking.' }}
+
+                    </p>
+
+
+                    <div class="rbx-event-meta">
+
+                        {% if event['event_date'] %}
+
+                        <span>
+                            📅 {{ event['event_date'] }}
+                        </span>
+
+                        {% endif %}
+
+
+                        {% if event['venue'] %}
+
+                        <span>
+                            📍 {{ event['venue'] }}
+                        </span>
+
+                        {% endif %}
+
+
+                        {% if event['team_size'] %}
+
+                        <span>
+                            👥 {{ event['team_size'] }} Members
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="rbx-intro-box">
+
+                <h3>
+                    No upcoming events yet.
+                </h3>
+
+                <p>
+                    New RUBIX challenges will appear here soon.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     EXPERIENCE
+     ===================================================== -->
+
+<section class="rbx-section rbx-reveal">
+
+    <div class="rbx-section-label">
+        The RUBIX Experience
+    </div>
+
+    <h2 class="rbx-section-title">
+        MORE THAN<br>
+        A COMPETITION.
+    </h2>
+
+
+    <div class="rbx-experience-grid">
+
+
+        <div class="rbx-experience-card">
+
+            <div class="rbx-experience-number">
+                01
+            </div>
+
+            <h3>
+                Think
+            </h3>
+
+            <p>
+                Approach unfamiliar problems with
+                curiosity, logic and a different
+                perspective.
+            </p>
+
+        </div>
+
+
+        <div class="rbx-experience-card">
+
+            <div class="rbx-experience-number">
+                02
+            </div>
+
+            <h3>
+                Solve
+            </h3>
+
+            <p>
+                Turn ideas into answers through
+                reasoning, strategy and teamwork.
+            </p>
+
+        </div>
+
+
+        <div class="rbx-experience-card">
+
+            <div class="rbx-experience-number">
+                03
+            </div>
+
+            <h3>
+                Conquer
+            </h3>
+
+            <p>
+                Push yourself through every round
+                and discover what you can achieve.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GALLERY CTA
+     ===================================================== -->
+
+<section class="rbx-section rbx-reveal">
+
+    <div class="rbx-gallery-cta">
+
+        <div class="rbx-section-label">
+            Memory Vault
+        </div>
+
+        <h2>
+            SEE THE<br>
+            MOMENTS.
+        </h2>
+
+        <p>
+            Explore the people, events and moments
+            that make RUBIX what it is.
+        </p>
+
+        <a
+            href="{{ url_for('gallery') }}"
+            class="rbx-btn rbx-btn-primary"
+        >
+            Enter Gallery →
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FINAL CTA
+     ===================================================== -->
+
+<section class="rbx-section rbx-final rbx-reveal">
+
+    <div class="rbx-section-label">
+        Your Move
+    </div>
+
+    <h2>
+        READY?
+    </h2>
+
+    <p>
+        Think sharp. Solve fast. Make your move.
+    </p>
+
+    <a
+        href="{{ url_for('events') }}"
+        class="rbx-btn rbx-btn-primary"
+    >
+        Explore RUBIX →
+    </a>
+
+</section>
+
+
+</div>
+
+
+<!-- =====================================================
+     SCROLL REVEAL JAVASCRIPT
+     ===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const elements =
+            document.querySelectorAll(".rbx-reveal");
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (entry.isIntersecting) {
+
+                                entry.target.classList.add(
+                                    "rbx-visible"
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        elements.forEach(
+            function (element) {
+
+                observer.observe(element);
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

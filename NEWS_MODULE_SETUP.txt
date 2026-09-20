@@ -1,0 +1,23 @@
+RUBIX CLUB NEWS MODULE - SETUP
+
+Added:
+- Public News listing: /news
+- Public article page: /news/<id>
+- Admin News manager: /admin/news (admin login required)
+- Add/Edit/Delete articles
+- Publish/Unpublish control
+- MySQL `news` table created automatically on first News route visit
+- News navigation link and Admin Dashboard card
+
+How to test:
+1. Start your existing Flask app using your normal virtual environment.
+2. Sign in to the existing admin panel.
+3. Open Admin Dashboard > Manage News.
+4. Add an article as Draft, then Publish it.
+5. Open the public News page from the navigation.
+
+Important:
+- MySQL must be running and the configured `rubix_club` database must exist.
+- Image field currently accepts an image URL; local upload is not part of this first pass.
+- Existing database tables are not altered. The module creates only a new `news` table.
+- Run on a local/test copy first and verify existing Events, Registration, and Gallery flows.

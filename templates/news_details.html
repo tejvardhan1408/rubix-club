@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }} | Rubix Club News{% endblock %}
+{% block content %}
+<article style="max-width:900px;margin:0 auto;padding:65px 24px;color:#fff">
+<a href="{{ url_for('news') }}" style="color:#67e8f9;text-decoration:none">← All News</a>
+{% if article.image %}<img src="{{ article.image }}" alt="{{ article.title }}" style="width:100%;max-height:460px;object-fit:cover;border-radius:18px;margin:26px 0">{% endif %}
+<p style="color:#22d3ee;margin-top:24px">RUBIX CLUB NEWS{% if article.published_at %} · {{ article.published_at.strftime('%d %B %Y') }}{% endif %}</p>
+<h1 style="font-size:clamp(2rem,5vw,3.5rem);margin:14px 0 24px">{{ article.title }}</h1><p style="font-size:1.15rem;color:#aab3c8;line-height:1.8">{{ article.summary }}</p>
+<div style="margin-top:30px;line-height:1.9;color:#e5e7eb;white-space:pre-wrap">{{ article.content }}</div>
+</article>
+{% endblock %}

@@ -1,0 +1,2065 @@
+{% extends "base.html" %}
+
+{% block title %}Events | Rubix Club{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     EVENTS HERO
+========================================================= -->
+
+<section class="events-hero">
+
+    <div class="events-hero-content">
+
+        <div class="events-badge">
+            ✦ RUBIX CLUB EVENTS
+        </div>
+
+        <h1>
+            LEARN.<br>
+            <span>COMPETE.</span><br>
+            CREATE.
+        </h1>
+
+        <p>
+            Discover technical events, aptitude challenges,
+            competitions and activities designed to bring
+            students together.
+        </p>
+
+        <div class="hero-stats">
+
+            <div>
+                <strong>{{ events|length }}</strong>
+                <span>EVENTS</span>
+            </div>
+
+            <div>
+                <strong>∞</strong>
+                <span>IDEAS</span>
+            </div>
+
+            <div>
+                <strong>24/7</strong>
+                <span>LEARNING</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HERO VISUAL -->
+
+    <div class="events-visual">
+
+        <div class="event-orbit orbit-a"></div>
+        <div class="event-orbit orbit-b"></div>
+        <div class="event-orbit orbit-c"></div>
+
+        <div class="event-core">
+            <span>R</span>
+            <small>EVENTS</small>
+        </div>
+
+        <div class="floating-event f1">
+            ⚡ TECH
+        </div>
+
+        <div class="floating-event f2">
+            🧠 APTITUDE
+        </div>
+
+        <div class="floating-event f3">
+            🏆 COMPETE
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     EVENTS SECTION
+========================================================= -->
+
+<section class="events-section">
+
+    <div class="section-heading">
+
+        <span>WHAT'S HAPPENING</span>
+
+        <h2>
+            Explore <strong>Events</strong>
+        </h2>
+
+        <p>
+            Participate, challenge yourself and experience
+            something new with Rubix Club.
+        </p>
+
+    </div>
+
+
+    <!-- EVENT FILTER -->
+
+    <div class="event-filter">
+
+        <button
+            class="filter-btn active"
+            data-filter="all"
+            type="button">
+            ALL
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="technical"
+            type="button">
+            TECHNICAL
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="aptitude"
+            type="button">
+            APTITUDE
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="competition"
+            type="button">
+            COMPETITION
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         EVENTS
+    ===================================================== -->
+
+    {% if events %}
+
+    <div class="events-grid">
+
+        {% for event in events %}
+
+        <article
+            class="event-card"
+            data-category="{{ (event['category'] or 'other')|lower|replace(' ', '-') }}"
+        >
+
+            <!-- EVENT IMAGE -->
+
+            <div class="event-image">
+
+                {% if event['image'] %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' ~ event['image']) }}"
+                        alt="{{ event['title'] }}"
+                        loading="lazy"
+                    >
+
+                {% else %}
+
+                    <div class="event-image-placeholder">
+                        <span>R</span>
+                    </div>
+
+                {% endif %}
+
+
+                <!-- CAPACITY STATUS -->
+
+                <div class="
+                    event-status
+                    {% if event['capacity_status'] == 'FULL' %}
+                        event-full
+                    {% elif event['capacity_status'] == 'ALMOST FULL' %}
+                        event-almost-full
+                    {% else %}
+                        event-open
+                    {% endif %}
+                ">
+
+                    {% if event['capacity_status'] == 'FULL' %}
+                        FULL
+                    {% elif event['capacity_status'] == 'ALMOST FULL' %}
+                        ALMOST FULL
+                    {% else %}
+                        OPEN
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- EVENT BODY -->
+
+            <div class="event-card-body">
+
+                <div class="event-number">
+                    EVENT {{ "%02d"|format(loop.index) }}
+                </div>
+
+
+                <span class="event-category">
+                    {{ event['category'] or 'RUBIX EVENT' }}
+                </span>
+
+
+                <h3>
+                    {{ event['title'] }}
+                </h3>
+
+
+                <p class="event-description">
+                    {% if event['description'] %}
+                        {{ event['description'] }}
+                    {% else %}
+                        An exciting Rubix Club event.
+                        Join us and be part of the experience.
+                    {% endif %}
+                </p>
+
+
+                <!-- EVENT INFORMATION -->
+
+                <div class="event-info">
+
+                    <!-- DATE -->
+
+                    <div>
+
+                        <small>DATE</small>
+
+                        <strong>
+
+                            {% if event['event_date'] %}
+                                {{ event['event_date'].strftime('%d %B %Y') }}
+                            {% else %}
+                                DATE TBA
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TIME -->
+
+                    <div>
+
+                        <small>TIME</small>
+
+                        <strong>
+
+                            {% if event['event_time'] %}
+
+                                {% if event['event_time'].strftime is defined %}
+                                    {{ event['event_time'].strftime('%I:%M %p') }}
+                                {% else %}
+                                    {{ event['event_time'] }}
+                                {% endif %}
+
+                            {% else %}
+                                TIME TBA
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- VENUE -->
+
+                    <div>
+
+                        <small>VENUE</small>
+
+                        <strong>
+                            {{ event['venue'] or 'TO BE ANNOUNCED' }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TEAM SIZE -->
+
+                    <div>
+
+                        <small>TEAM SIZE</small>
+
+                        <strong>
+                            {{ event['team_size'] or 'INDIVIDUAL' }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TEAM CAPACITY
+                ================================================= -->
+
+                <div class="event-capacity">
+
+                    <div class="capacity-top">
+
+                        <span>
+                            TEAM CAPACITY
+                        </span>
+
+                        <strong>
+                            {{ event['registered_teams'] }}
+                            /
+                            {{ event['max_teams'] }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="capacity-bar">
+
+                        {% set max_capacity = event['max_teams']|int %}
+                        {% set registered = event['registered_teams']|int %}
+
+                        {% if max_capacity > 0 %}
+
+                            {% set percentage =
+                                ((registered / max_capacity) * 100)
+                            %}
+
+                        {% else %}
+
+                            {% set percentage = 0 %}
+
+                        {% endif %}
+
+                        {% if percentage > 100 %}
+                            {% set percentage = 100 %}
+                        {% endif %}
+
+                        <div
+    class="
+        capacity-progress
+        {% if event['capacity_status'] == 'FULL' %}
+            progress-full
+        {% elif event['capacity_status'] == 'ALMOST FULL' %}
+            progress-warning
+        {% endif %}        
+    style="width: {{ percentage }}%;
+></div>
+                    </div>
+
+
+                    <div class="capacity-bottom">
+
+                        {% if event['capacity_status'] == 'FULL' %}
+
+                            <span class="capacity-full-text">
+                                REGISTRATION FULL
+                            </span>
+
+                        {% elif event['capacity_status'] == 'ALMOST FULL' %}
+
+                            <span class="capacity-warning-text">
+                                ONLY {{ event['remaining_teams'] }} SPOTS LEFT
+                            </span>
+
+                        {% else %}
+
+                            <span>
+                                {{ event['remaining_teams'] }}
+                                SPOTS REMAINING
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CARD FOOTER
+                ================================================= -->
+
+                <div class="event-footer">
+
+                    <span>
+                        RUBIX CLUB
+                    </span>
+
+
+                    <div class="event-card-actions">
+
+                        <!-- VIEW EVENT -->
+
+                        <a
+                            href="{{ url_for('event_details', event_id=event['id']) }}"
+                            class="event-button"
+                        >
+                            VIEW EVENT
+                        </a>
+
+
+                        <!-- REGISTER -->
+
+                        {% if event['capacity_status'] == 'FULL' %}
+
+                            <span class="
+                                event-button
+                                event-register-button
+                                event-button-disabled
+                            ">
+                                REGISTRATION FULL
+                            </span>
+
+                        {% else %}
+
+                            <a
+                                href="{{ url_for('register_event', event_id=event['id']) }}"
+                                class="event-button event-register-button"
+                            >
+                                REGISTER NOW →
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- NO EVENTS -->
+
+    {% else %}
+
+    <div class="empty-events">
+
+        <div>✦</div>
+
+        <h3>
+            No Events Yet
+        </h3>
+
+        <p>
+            New Rubix Club events will appear here when they are
+            added through the Admin Dashboard.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- =========================================================
+     CTA
+========================================================= -->
+
+<section class="events-cta">
+
+    <div>
+
+        <span>
+            YOUR NEXT EXPERIENCE STARTS HERE
+        </span>
+
+        <h2>
+            Ready To <strong>Compete?</strong>
+        </h2>
+
+        <p>
+            Stay connected with Rubix Club and never miss
+            an upcoming event.
+        </p>
+
+    </div>
+
+
+    <a
+       href="{{ url_for('about') }}"
+        class="cta-button"
+    >
+        MEET THE TEAM →
+    </a>
+
+</section>
+
+
+<!-- =========================================================
+     CSS
+========================================================= -->
+
+<style>
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.events-hero {
+
+    min-height: 78vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 70px;
+
+    padding: 90px 8%;
+
+    position: relative;
+    overflow: hidden;
+}
+
+
+.events-hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 650px;
+    height: 650px;
+
+    left: -300px;
+    top: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(124, 58, 237, 0.13);
+
+    filter: blur(110px);
+
+    pointer-events: none;
+}
+
+
+.events-hero-content {
+
+    max-width: 650px;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+.events-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 10px 18px;
+
+    border-radius: 50px;
+
+    border: 1px solid rgba(139, 92, 246, 0.35);
+
+    background: rgba(139, 92, 246, 0.08);
+
+    color: #a78bfa;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+}
+
+
+.events-hero h1 {
+
+    font-size: clamp(55px, 8vw, 105px);
+
+    line-height: 0.88;
+
+    margin: 30px 0;
+
+    font-weight: 900;
+
+    letter-spacing: -5px;
+
+}
+
+
+.events-hero h1 span,
+.section-heading strong,
+.events-cta strong {
+
+    background: linear-gradient(
+        90deg,
+        #8b5cf6,
+        #06b6d4
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+}
+
+
+.events-hero p {
+
+    max-width: 570px;
+
+    color: #9ca8bd;
+
+    line-height: 1.8;
+
+    font-size: 17px;
+
+}
+
+
+.hero-stats {
+
+    display: flex;
+
+    gap: 45px;
+
+    margin-top: 40px;
+
+}
+
+
+.hero-stats div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+
+.hero-stats strong {
+
+    font-size: 25px;
+
+}
+
+
+.hero-stats span {
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    color: #69758b;
+
+}
+
+
+/* =========================================================
+   HERO VISUAL
+========================================================= */
+
+.events-visual {
+
+    width: 420px;
+    height: 420px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.event-orbit {
+
+    position: absolute;
+
+    border: 1px solid rgba(139, 92, 246, 0.25);
+
+    border-radius: 50%;
+
+}
+
+
+.orbit-a {
+
+    width: 260px;
+    height: 260px;
+
+    animation: orbitSpin 15s linear infinite;
+
+}
+
+
+.orbit-b {
+
+    width: 350px;
+    height: 190px;
+
+    transform: rotate(35deg);
+
+    border-color: rgba(6, 182, 212, 0.3);
+
+    animation: orbitReverse 18s linear infinite;
+
+}
+
+
+.orbit-c {
+
+    width: 400px;
+    height: 400px;
+
+    border-style: dashed;
+
+    border-color: rgba(139, 92, 246, 0.15);
+
+    animation: orbitSpin 25s linear infinite;
+
+}
+
+
+.event-core {
+
+    width: 135px;
+    height: 135px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #06b6d4
+    );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    box-shadow:
+        0 0 60px rgba(124, 58, 237, 0.45),
+        0 0 100px rgba(6, 182, 212, 0.15);
+
+    z-index: 2;
+
+}
+
+
+.event-core span {
+
+    font-size: 58px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+}
+
+
+.event-core small {
+
+    font-size: 8px;
+
+    letter-spacing: 3px;
+
+    margin-top: 8px;
+
+}
+
+
+.floating-event {
+
+    position: absolute;
+
+    padding: 12px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: rgba(10, 14, 30, 0.8);
+
+    backdrop-filter: blur(15px);
+
+    border-radius: 12px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+
+    z-index: 3;
+
+}
+
+
+.f1 {
+
+    top: 35px;
+    right: 10px;
+
+    animation: floatOne 4s ease-in-out infinite;
+
+}
+
+
+.f2 {
+
+    bottom: 70px;
+    left: 0;
+
+    animation: floatTwo 5s ease-in-out infinite;
+
+}
+
+
+.f3 {
+
+    bottom: 5px;
+    right: 35px;
+
+    animation: floatOne 4.5s ease-in-out infinite;
+
+}
+
+
+@keyframes orbitSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+@keyframes orbitReverse {
+
+    from {
+        transform: rotate(35deg);
+    }
+
+    to {
+        transform: rotate(-325deg);
+    }
+
+}
+
+
+@keyframes floatOne {
+
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+
+}
+
+
+@keyframes floatTwo {
+
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(12px);
+    }
+
+}
+
+
+/* =========================================================
+   EVENTS SECTION
+========================================================= */
+
+.events-section {
+
+    padding: 110px 8%;
+
+}
+
+
+.section-heading {
+
+    max-width: 750px;
+
+    margin-bottom: 45px;
+
+}
+
+
+.section-heading > span,
+.events-cta span {
+
+    color: #8b5cf6;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+}
+
+
+.section-heading h2 {
+
+    font-size: clamp(40px, 5vw, 65px);
+
+    margin: 15px 0;
+
+    letter-spacing: -2px;
+
+}
+
+
+.section-heading p {
+
+    color: #8995aa;
+
+    line-height: 1.8;
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.event-filter {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 45px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.filter-btn {
+
+    padding: 11px 20px;
+
+    border-radius: 50px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: rgba(255, 255, 255, 0.03);
+
+    color: #8f9bb0;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+
+}
+
+
+.filter-btn:hover,
+.filter-btn.active {
+
+    color: white;
+
+    border-color: #7c3aed;
+
+    background: rgba(124, 58, 237, 0.18);
+
+    box-shadow:
+        0 0 20px rgba(124, 58, 237, 0.15);
+
+}
+
+
+/* =========================================================
+   EVENT GRID
+========================================================= */
+
+.events-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 28px;
+
+}
+
+
+/* =========================================================
+   EVENT CARD
+========================================================= */
+
+.event-card {
+
+    border-radius: 26px;
+
+    border: 1px solid rgba(139, 92, 246, 0.14);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.012)
+        );
+
+    transition: 0.4s ease;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+
+.event-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 15%;
+
+    width: 70%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(139, 92, 246, 0.8),
+            transparent
+        );
+
+    opacity: 0;
+
+    transition: 0.4s;
+
+}
+
+
+.event-card:hover {
+
+    transform: translateY(-10px);
+
+    border-color: rgba(6, 182, 212, 0.45);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35),
+        0 0 35px rgba(124, 58, 237, 0.08);
+
+}
+
+
+.event-card:hover::before {
+
+    opacity: 1;
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.event-image {
+
+    height: 220px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #080d1c;
+
+}
+
+
+.event-image::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(5, 8, 22, 0.7),
+            transparent 55%
+        );
+
+    pointer-events: none;
+
+}
+
+
+.event-image img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: 0.6s ease;
+
+}
+
+
+.event-card:hover .event-image img {
+
+    transform: scale(1.08);
+
+}
+
+
+.event-image-placeholder {
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(124, 58, 237, 0.3),
+            rgba(5, 8, 22, 0.98)
+        );
+
+}
+
+
+.event-image-placeholder span {
+
+    font-size: 75px;
+
+    font-weight: 900;
+
+    color: #8b5cf6;
+
+    text-shadow:
+        0 0 40px rgba(139, 92, 246, 0.5);
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.event-image .event-status {
+
+    position: absolute;
+
+    z-index: 2;
+
+    top: 16px;
+    right: 16px;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    background: rgba(5, 8, 22, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(10px);
+
+    color: #67e8f9;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+
+.event-image .event-status.event-almost-full {
+
+    color: #fbbf24;
+
+    border-color: rgba(251, 191, 36, 0.25);
+
+}
+
+
+.event-image .event-status.event-full {
+
+    color: #fb7185;
+
+    border-color: rgba(251, 113, 133, 0.25);
+
+}
+
+
+.event-image .event-status.event-open {
+
+    color: #67e8f9;
+
+}
+
+
+/* =========================================================
+   CARD BODY
+========================================================= */
+
+.event-card-body {
+
+    padding: 27px;
+
+}
+
+
+.event-number {
+
+    color: #536077;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.event-category {
+
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    background: rgba(139, 92, 246, 0.08);
+
+    color: #a78bfa;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.event-card-body h3 {
+
+    font-size: 27px;
+
+    line-height: 1.1;
+
+    margin: 15px 0 10px;
+
+    letter-spacing: -0.8px;
+
+}
+
+
+.event-description {
+
+    color: #8995aa;
+
+    line-height: 1.7;
+
+    font-size: 13px;
+
+    min-height: 68px;
+
+}
+
+
+/* =========================================================
+   EVENT INFORMATION
+========================================================= */
+
+.event-info {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    margin-top: 22px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+
+.event-info > div {
+
+    padding: 15px 10px 15px 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+
+}
+
+
+.event-info > div:nth-child(odd) {
+
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+
+    padding-right: 15px;
+
+}
+
+
+.event-info > div:nth-child(even) {
+
+    padding-left: 15px;
+
+}
+
+
+.event-info > div:nth-child(n + 3) {
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+
+.event-info small {
+
+    color: #59667c;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.event-info strong {
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+/* =========================================================
+   CAPACITY
+========================================================= */
+
+.event-capacity {
+
+    margin-top: 22px;
+
+    padding: 15px 0 4px;
+
+}
+
+
+.capacity-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+}
+
+
+.capacity-top span {
+
+    color: #59667c;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.capacity-top strong {
+
+    color: #d7deea;
+
+    font-size: 10px;
+
+}
+
+
+.capacity-bar {
+
+    width: 100%;
+
+    height: 5px;
+
+    margin: 10px 0;
+
+    overflow: hidden;
+
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+}
+
+
+.capacity-progress {
+
+    height: 100%;
+
+    min-width: 0;
+
+    border-radius: 50px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+    transition: width 0.5s ease;
+
+}
+
+
+.capacity-progress.progress-warning {
+
+    background:
+        linear-gradient(
+            90deg,
+            #f59e0b,
+            #fbbf24
+        );
+
+}
+
+
+.capacity-progress.progress-full {
+
+    background:
+        linear-gradient(
+            90deg,
+            #ef4444,
+            #fb7185
+        );
+
+}
+
+
+.capacity-bottom {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.capacity-bottom span {
+
+    color: #69758b;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+}
+
+
+.capacity-warning-text {
+
+    color: #fbbf24 !important;
+
+}
+
+
+.capacity-full-text {
+
+    color: #fb7185 !important;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.event-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding-top: 22px;
+
+}
+
+
+.event-footer > span {
+
+    color: #59667c;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.event-card-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+/* BUTTON */
+
+.event-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 13px;
+
+    border-radius: 9px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: #b4bfd0;
+
+    text-decoration: none;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    transition: 0.3s ease;
+
+}
+
+
+.event-button:hover {
+
+    color: white;
+
+    border-color: rgba(139, 92, 246, 0.5);
+
+    background: rgba(139, 92, 246, 0.12);
+
+    transform: translateY(-2px);
+
+}
+
+
+.event-register-button {
+
+    border: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+    box-shadow:
+        0 8px 22px rgba(124, 58, 237, 0.2);
+
+}
+
+
+.event-register-button:hover {
+
+    color: white;
+
+    box-shadow:
+        0 12px 30px rgba(124, 58, 237, 0.35);
+
+}
+
+
+.event-button-disabled {
+
+    opacity: 0.35;
+
+    cursor: not-allowed;
+
+    pointer-events: none;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: #7d8798;
+
+    box-shadow: none;
+
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-events {
+
+    text-align: center;
+
+    padding: 80px 30px;
+
+    border: 1px dashed rgba(139, 92, 246, 0.25);
+
+    border-radius: 25px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+}
+
+
+.empty-events > div {
+
+    font-size: 50px;
+
+    color: #8b5cf6;
+
+}
+
+
+.empty-events h3 {
+
+    font-size: 28px;
+
+    margin: 15px 0 8px;
+
+}
+
+
+.empty-events p {
+
+    color: #8995aa;
+
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.events-cta {
+
+    margin: 50px 8% 100px;
+
+    padding: 65px;
+
+    border-radius: 30px;
+
+    border: 1px solid rgba(139, 92, 246, 0.25);
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(6, 182, 212, 0.14),
+            transparent 40%
+        ),
+        rgba(124, 58, 237, 0.07);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+}
+
+
+.events-cta h2 {
+
+    font-size: 42px;
+
+    margin: 15px 0;
+
+}
+
+
+.events-cta p {
+
+    color: #8995aa;
+
+}
+
+
+.cta-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 16px 28px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    transition: 0.3s;
+
+}
+
+
+.cta-button:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 40px rgba(124, 58, 237, 0.3);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .events-hero {
+        gap: 30px;
+    }
+
+    .events-visual {
+        transform: scale(0.85);
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .events-hero {
+
+        flex-direction: column;
+
+        text-align: center;
+
+        padding: 80px 6%;
+
+    }
+
+    .events-hero p {
+
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .hero-stats {
+
+        justify-content: center;
+
+    }
+
+    .events-visual {
+
+        margin-top: -30px;
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .events-hero {
+
+        padding: 70px 5%;
+
+    }
+
+    .events-hero h1 {
+
+        font-size: 58px;
+
+        letter-spacing: -3px;
+
+    }
+
+    .events-visual {
+
+        width: 330px;
+
+        height: 330px;
+
+        transform: scale(0.75);
+
+        margin-top: -45px;
+
+    }
+
+    .events-section {
+
+        padding: 75px 5%;
+
+    }
+
+    .events-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .event-card-body {
+
+        padding: 23px;
+
+    }
+
+    .event-footer {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+    .event-card-actions {
+
+        width: 100%;
+
+    }
+
+    .event-button {
+
+        flex: 1;
+
+    }
+
+    .events-cta {
+
+        margin-left: 5%;
+        margin-right: 5%;
+
+        padding: 35px 25px;
+
+        flex-direction: column;
+
+        text-align: center;
+
+    }
+
+    .events-cta h2 {
+
+        font-size: 32px;
+
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .capacity-top span,
+    .capacity-top strong {
+
+        font-size: 8px;
+
+    }
+
+    .capacity-bottom span {
+
+        font-size: 7px;
+
+    }
+
+    .event-card-actions {
+
+        flex-direction: column;
+
+    }
+
+    .event-button {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const buttons =
+        document.querySelectorAll(".filter-btn");
+
+    const cards =
+        document.querySelectorAll(".event-card");
+
+
+    buttons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            buttons.forEach(function (btn) {
+
+                btn.classList.remove("active");
+
+            });
+
+
+            button.classList.add("active");
+
+
+            const filter =
+                button.dataset.filter.toLowerCase();
+
+
+            cards.forEach(function (card) {
+
+                const category =
+                    (card.dataset.category || "").toLowerCase();
+
+
+                if (
+                    filter === "all" ||
+                    category === filter ||
+                    category.includes(filter)
+                ) {
+
+                    card.style.display = "";
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

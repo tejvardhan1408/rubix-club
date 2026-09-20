@@ -1,0 +1,769 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   RUBIX MEMORY VAULT
+========================================================= */
+
+.gallery-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(0, 229, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 30%, rgba(155, 89, 255, 0.10), transparent 30%),
+        #05060a;
+    color: #fff;
+    padding-bottom: 100px;
+    overflow: hidden;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.gallery-hero {
+    position: relative;
+    min-height: 430px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 90px 25px 70px;
+    overflow: hidden;
+}
+
+.gallery-hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(0, 229, 255, 0.08);
+    filter: blur(100px);
+    top: -220px;
+    left: -120px;
+}
+
+.gallery-hero::after {
+    content: "";
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    background: rgba(150, 70, 255, 0.08);
+    filter: blur(100px);
+    bottom: -250px;
+    right: -100px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+}
+
+.hero-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 16px;
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: 50px;
+    background: rgba(0, 229, 255, 0.05);
+    color: #67edff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.hero-mini span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #00e5ff;
+    box-shadow: 0 0 15px #00e5ff;
+}
+
+.gallery-hero h1 {
+    margin: 0;
+    font-size: clamp(48px, 8vw, 100px);
+    line-height: 0.95;
+    font-weight: 950;
+    letter-spacing: -5px;
+}
+
+.gallery-hero h1 .gradient {
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #66efff,
+        #a970ff,
+        #ffffff
+    );
+    background-size: 250% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 5s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 250% center;
+    }
+}
+
+.gallery-hero p {
+    max-width: 650px;
+    margin: 25px auto 0;
+    color: #9da4b8;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   FLOATING LABEL
+========================================================= */
+
+.vault-label {
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: #626a80;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.gallery-container {
+    width: min(1250px, calc(100% - 40px));
+    margin: auto;
+}
+
+/* =========================================================
+   GALLERY SECTION
+========================================================= */
+
+.gallery-section {
+    margin-bottom: 80px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.section-heading-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-number {
+    color: #00e5ff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: clamp(25px, 4vw, 38px);
+    letter-spacing: -1.5px;
+}
+
+.section-description {
+    color: #737b90;
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.memory-count {
+    color: #70788d;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   FEATURED COVER
+========================================================= */
+
+.gallery-cover {
+    position: relative;
+    height: 390px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #0b0d13;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    margin-bottom: 18px;
+}
+
+.gallery-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.gallery-cover:hover img {
+    transform: scale(1.04);
+}
+
+.gallery-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            to top,
+            rgba(2,3,7,0.95),
+            rgba(2,3,7,0.25) 55%,
+            transparent
+        );
+}
+
+.cover-content {
+    position: absolute;
+    z-index: 2;
+    bottom: 30px;
+    left: 32px;
+    right: 32px;
+}
+
+.cover-tag {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 30px;
+    background: rgba(0,229,255,0.12);
+    border: 1px solid rgba(0,229,255,0.25);
+    color: #67edff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.cover-content h3 {
+    margin: 0 0 8px;
+    font-size: clamp(25px, 4vw, 40px);
+    letter-spacing: -1px;
+}
+
+.cover-content p {
+    margin: 0;
+    max-width: 650px;
+    color: #bbc0ce;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   IMAGE GRID
+========================================================= */
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 210px;
+    gap: 14px;
+}
+
+.memory-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #0b0d13;
+    border: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+}
+
+.memory-card:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.memory-card:nth-child(4) {
+    grid-column: span 2;
+}
+
+.memory-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition:
+        transform 0.65s ease,
+        filter 0.65s ease;
+}
+
+.memory-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(0.72);
+}
+
+.memory-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.8),
+        transparent 65%
+    );
+    transition: opacity 0.35s ease;
+}
+
+.memory-card:hover .memory-overlay {
+    opacity: 1;
+}
+
+.memory-overlay span {
+    color: #67edff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.memory-overlay strong {
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-gallery {
+    padding: 100px 25px;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.12);
+    border-radius: 30px;
+    background: rgba(255,255,255,0.015);
+}
+
+.empty-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+.empty-gallery h3 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.empty-gallery p {
+    margin: 0;
+    color: #777f93;
+}
+
+/* =========================================================
+   LIGHTBOX
+========================================================= */
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: rgba(0,0,0,0.94);
+    backdrop-filter: blur(18px);
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox img {
+    max-width: 92vw;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 25px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.lightbox-close:hover {
+    background: rgba(0,229,255,0.15);
+    border-color: rgba(0,229,255,0.4);
+    color: #67edff;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 200px;
+    }
+
+    .memory-card:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    .memory-card:nth-child(4) {
+        grid-column: span 1;
+    }
+
+    .gallery-cover {
+        height: 330px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .gallery-container {
+        width: min(100% - 24px, 1250px);
+    }
+
+    .gallery-hero {
+        min-height: 380px;
+        padding-top: 70px;
+    }
+
+    .gallery-hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .gallery-hero p {
+        font-size: 14px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .gallery-cover {
+        height: 280px;
+        border-radius: 20px;
+    }
+
+    .cover-content {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .memory-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 150px;
+        gap: 9px;
+    }
+
+    .memory-card {
+        border-radius: 14px;
+    }
+
+    .memory-card:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    .memory-card:nth-child(4) {
+        grid-column: span 2;
+    }
+}
+</style>
+
+
+<div class="gallery-page">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="gallery-hero">
+
+        <div class="hero-content">
+
+            <div class="hero-mini">
+                <span></span>
+                RUBIX MEMORY VAULT
+            </div>
+
+            <h1>
+                Moments<br>
+                <span class="gradient">That Stay.</span>
+            </h1>
+
+            <p>
+                Explore the moments, people, challenges and memories
+                that make RUBIX more than just a club.
+            </p>
+
+        </div>
+
+        <div class="vault-label">
+            SCROLL TO EXPLORE
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         GALLERIES
+    ====================================================== -->
+
+    <main class="gallery-container">
+
+        {% if galleries %}
+
+            {% for gallery in galleries %}
+
+                <section class="gallery-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <div class="section-heading-left">
+
+                                <span class="section-number">
+                                    {{ "%02d"|format(loop.index) }}
+                                </span>
+
+                                <h2>
+                                    {{ gallery.title }}
+                                </h2>
+
+                            </div>
+
+                            {% if gallery.description %}
+                                <div class="section-description">
+                                    {{ gallery.description }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="memory-count">
+                            MEMORY {{ "%02d"|format(loop.index) }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURED COVER -->
+
+                    {% if gallery.cover_image %}
+
+                        <div class="gallery-cover">
+
+                            <img
+                                src="{{ gallery.cover_image }}"
+                                alt="{{ gallery.title }}"
+                                loading="lazy"
+                            >
+
+                            <div class="cover-content">
+
+                                <div class="cover-tag">
+                                    RUBIX EVENT
+                                </div>
+
+                                <h3>
+                                    {{ gallery.title }}
+                                </h3>
+
+                                {% if gallery.description %}
+                                    <p>
+                                        {{ gallery.description }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- IMAGE GRID -->
+
+                    {% set ns = namespace(found=false) %}
+
+                    <div class="memory-grid">
+
+                        {% for image in gallery_images %}
+
+                            {% if image.gallery_id == gallery.id %}
+
+                                {% set ns.found = true %}
+
+                                <div
+                                    class="memory-card"
+                                    onclick="openLightbox('{{ image.image }}')"
+                                >
+
+                                    <img
+                                        src="{{ image.image }}"
+                                        alt="{{ gallery.title }} memory"
+                                        loading="lazy"
+                                    >
+
+                                    <div class="memory-overlay">
+
+                                        <span>
+                                            RUBIX
+                                        </span>
+
+                                        <strong>
+                                            {{ gallery.title }}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-gallery">
+
+                <div class="empty-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    The Memory Vault is Empty
+                </h3>
+
+                <p>
+                    New RUBIX moments will appear here soon.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     LIGHTBOX
+========================================================= -->
+
+<div
+    class="lightbox"
+    id="lightbox"
+    onclick="closeLightbox(event)"
+>
+
+    <button
+        class="lightbox-close"
+        onclick="closeLightbox(event)"
+    >
+        ×
+    </button>
+
+    <img
+        id="lightboxImage"
+        src=""
+        alt="RUBIX memory"
+    >
+
+</div>
+
+
+<script>
+
+function openLightbox(imageUrl) {
+
+    const lightbox = document.getElementById("lightbox");
+    const image = document.getElementById("lightboxImage");
+
+    image.src = imageUrl;
+
+    lightbox.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeLightbox(event) {
+
+    if (
+        event.target.id === "lightbox" ||
+        event.target.classList.contains("lightbox-close")
+    ) {
+
+        const lightbox = document.getElementById("lightbox");
+
+        lightbox.classList.remove("active");
+
+        document.body.style.overflow = "";
+    }
+}
+
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        const lightbox = document.getElementById("lightbox");
+
+        lightbox.classList.remove("active");
+
+        document.body.style.overflow = "";
+    }
+
+});
+
+</script>
+
+{% endblock %}

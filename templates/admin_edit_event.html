@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Event | Rubix Club</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(124,58,237,0.16),
+                    transparent 35%
+                ),
+                #070b1a;
+
+            color: white;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        .topbar {
+
+            height: 75px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            background: #0d1328;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            font-weight: 800;
+        }
+
+
+        .logo {
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4
+                );
+
+            font-weight: 900;
+        }
+
+
+        .back {
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            padding: 10px 16px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+
+        .container {
+
+            max-width: 1050px;
+
+            margin: auto;
+
+            padding: 45px 25px 70px;
+        }
+
+
+        .heading {
+
+            margin-bottom: 30px;
+        }
+
+
+        .heading small {
+
+            color: #22d3ee;
+
+            letter-spacing: 2px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+
+        .heading h1 {
+
+            font-size: 40px;
+
+            margin-top: 8px;
+        }
+
+
+        .heading p {
+
+            color: #8f9ab7;
+
+            margin-top: 8px;
+        }
+
+
+        .card {
+
+            background: #0d1328;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 20px;
+
+            padding: 35px;
+        }
+
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .full {
+
+            grid-column: 1 / -1;
+        }
+
+
+        .field {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        label {
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        input,
+        textarea,
+        select {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            background: #080d20;
+
+            color: white;
+
+            outline: none;
+
+            font-family: inherit;
+        }
+
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+
+            border-color: #22d3ee;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(34,211,238,0.08);
+        }
+
+
+        textarea {
+
+            min-height: 130px;
+
+            resize: vertical;
+        }
+
+
+        option {
+
+            background: #0d1328;
+        }
+
+
+        .actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 12px;
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        .cancel,
+        .save {
+
+            padding: 13px 22px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+
+        .cancel {
+
+            color: #cbd5e1;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+
+        .save {
+
+            border: none;
+
+            cursor: pointer;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4
+                );
+        }
+
+
+        @media(max-width:700px) {
+
+            .topbar {
+
+                padding: 0 18px;
+            }
+
+
+            .brand span {
+
+                font-size: 12px;
+            }
+
+
+            .container {
+
+                padding:
+                    30px 15px 50px;
+            }
+
+
+            .card {
+
+                padding: 22px;
+            }
+
+
+            .grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .full {
+
+                grid-column: auto;
+            }
+
+
+            .actions {
+
+                flex-direction: column;
+            }
+
+
+            .cancel,
+            .save {
+
+                text-align: center;
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="logo">
+            R
+        </div>
+
+        <span>
+            RUBIX CLUB ADMIN
+        </span>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('admin_events') }}"
+        class="back"
+    >
+        ← Back
+    </a>
+
+</header>
+
+
+
+<main class="container">
+
+
+    <div class="heading">
+
+        <small>
+            EVENT MANAGEMENT
+        </small>
+
+        <h1>
+            Edit Event
+        </h1>
+
+        <p>
+            Update the information for this event.
+        </p>
+
+    </div>
+
+
+
+    <form
+        method="POST"
+        class="card"
+    >
+
+
+        <div class="grid">
+
+
+            <div class="field full">
+
+                <label>
+                    Event Title *
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ event.title or '' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                >{{ event.description or '' }}</textarea>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Event Date
+                </label>
+
+                <input
+                    type="date"
+                    name="event_date"
+                    value="{{ event.event_date or '' }}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Event Time
+                </label>
+
+                <input
+                    type="time"
+                    name="event_time"
+                    value="{{ event.event_time or '' }}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Venue
+                </label>
+
+                <input
+                    type="text"
+                    name="venue"
+                    value="{{ event.venue or '' }}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Category
+                </label>
+
+                <select name="category">
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option
+                        value="General Knowledge"
+                        {% if event.category == "General Knowledge" %}selected{% endif %}
+                    >
+                        General Knowledge
+                    </option>
+
+                    <option
+                        value="Aptitude"
+                        {% if event.category == "Aptitude" %}selected{% endif %}
+                    >
+                        Aptitude
+                    </option>
+
+                    <option
+                        value="Reasoning"
+                        {% if event.category == "Reasoning" %}selected{% endif %}
+                    >
+                        Reasoning
+                    </option>
+
+                    <option
+                        value="Technical"
+                        {% if event.category == "Technical" %}selected{% endif %}
+                    >
+                        Technical
+                    </option>
+
+                    <option
+                        value="Hackathon"
+                        {% if event.category == "Hackathon" %}selected{% endif %}
+                    >
+                        Hackathon
+                    </option>
+
+                    <option
+                        value="Workshop"
+                        {% if event.category == "Workshop" %}selected{% endif %}
+                    >
+                        Workshop
+                    </option>
+
+                    <option
+                        value="Quiz"
+                        {% if event.category == "Quiz" %}selected{% endif %}
+                    >
+                        Quiz
+                    </option>
+
+                    <option
+                        value="Other"
+                        {% if event.category == "Other" %}selected{% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Team Size
+                </label>
+
+                <input
+                    type="text"
+                    name="team_size"
+                    value="{{ event.team_size or '' }}"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Status
+                </label>
+
+                <select name="status">
+
+                    <option
+                        value="upcoming"
+                        {% if event.status == "upcoming" %}selected{% endif %}
+                    >
+                        Upcoming
+                    </option>
+
+                    <option
+                        value="active"
+                        {% if event.status == "active" %}selected{% endif %}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="completed"
+                        {% if event.status == "completed" %}selected{% endif %}
+                    >
+                        Completed
+                    </option>
+
+                    <option
+                        value="cancelled"
+                        {% if event.status == "cancelled" %}selected{% endif %}
+                    >
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+                    Event Image
+                </label>
+
+                <input
+                    type="text"
+                    name="image"
+                    value="{{ event.image or '' }}"
+                    placeholder="/static/uploads/event.jpg"
+                >
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+                    Registration Link
+                </label>
+
+                <input
+                    type="url"
+                    name="registration_link"
+                    value="{{ event.registration_link or '' }}"
+                    placeholder="https://forms.google.com/..."
+                >
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+                    Registration QR
+                </label>
+
+                <input
+                    type="text"
+                    name="registration_qr"
+                    value="{{ event.registration_qr or '' }}"
+                    placeholder="/static/uploads/qr.png"
+                >
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+                    Rules & Instructions
+                </label>
+
+                <textarea
+                    name="rules"
+                >{{ event.rules or '' }}</textarea>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="actions">
+
+            <a
+                href="{{ url_for('admin_events') }}"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="save"
+            >
+                Save Changes →
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+</main>
+
+
+</body>
+
+</html>

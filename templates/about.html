@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}About | Rubix Club{% endblock %}
+
+{% block content %}
+
+<section class="about-hero">
+    <div class="about-hero-content">
+        <div class="about-badge">✦ CSE STUDENT COMMUNITY</div>
+
+        <h1>ABOUT <span>RUBIX</span></h1>
+
+        <p>
+            A student-driven community built to transform curiosity,
+            creativity and technical knowledge into meaningful experiences.
+        </p>
+    </div>
+
+    <div class="about-orbit">
+        <div class="orbit-ring ring-one"></div>
+        <div class="orbit-ring ring-two"></div>
+        <div class="orbit-core"><span>R</span></div>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="section-heading">
+        <span>WHO WE ARE</span>
+        <h2>More Than A <strong>Club</strong></h2>
+        <p>
+            Rubix Club is a student community created to encourage
+            technical learning, problem-solving, collaboration and
+            creativity among students.
+        </p>
+    </div>
+
+    <div class="about-grid">
+        <div class="about-card">
+            <div class="about-icon">💡</div>
+            <h3>Innovation</h3>
+            <p>
+                Encouraging students to think differently, explore new
+                technologies and turn ideas into practical solutions.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-icon">🧠</div>
+            <h3>Knowledge</h3>
+            <p>
+                Creating opportunities to learn through technical
+                activities, competitions, discussions and workshops.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-icon">🤝</div>
+            <h3>Community</h3>
+            <p>
+                Building a collaborative environment where students can
+                share ideas, learn from each other and grow together.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="mission-section">
+    <div class="mission-card">
+        <div class="mission-number">01</div>
+        <div>
+            <span>OUR MISSION</span>
+            <h2>Learn. Create. <strong>Compete.</strong></h2>
+            <p>
+                Our mission is to provide students with a platform where
+                they can develop technical knowledge, problem-solving
+                abilities, leadership skills and confidence through
+                practical activities.
+            </p>
+        </div>
+    </div>
+
+    <div class="mission-card">
+        <div class="mission-number">02</div>
+        <div>
+            <span>OUR VISION</span>
+            <h2>Ideas Into <strong>Impact.</strong></h2>
+            <p>
+                We envision a student community where curiosity becomes
+                innovation, learning becomes experience and student ideas
+                create meaningful impact.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- FACULTY LEADERSHIP -->
+<section class="leadership-section">
+    <div class="section-heading">
+        <span>FACULTY LEADERSHIP</span>
+        <h2>Guided By <strong>Experience</strong></h2>
+        <p>
+            Faculty leadership supporting and guiding the Rubix Club community.
+        </p>
+    </div>
+
+    <div class="leadership-grid">
+
+        <div class="leader-card">
+            <div class="leader-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/hod.jpeg') }}"
+                     alt="Dr G Satyanaryana">
+            </div>
+
+            <div class="leader-info">
+                <span>HEAD OF THE DEPARTMENT</span>
+                <h3>Dr G Satyanaryana</h3>
+                <p>CSE Department</p>
+            </div>
+        </div>
+
+        <div class="leader-card featured-leader">
+            <div class="leader-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/faculty.png') }}"
+                     alt="Ms N Anjali">
+            </div>
+
+            <div class="leader-info">
+                <span>FACULTY COORDINATOR</span>
+                <h3>Ms N Anjali</h3>
+                <p>Rubix Club</p>
+
+                <a class="phone-link" href="tel:+916305705549">
+                    ☎ <span>+91 6305705549</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- STUDENT LEADERSHIP -->
+<section class="student-leadership">
+    <div class="section-heading">
+        <span>STUDENT LEADERSHIP</span>
+        <h2>Meet The <strong>Team</strong></h2>
+        <p>
+            Student leaders who help plan, coordinate and execute
+            Rubix Club activities.
+        </p>
+    </div>
+
+    <div class="student-grid">
+
+        <div class="student-card">
+            <div class="student-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/president.jpeg') }}"
+                     alt="T Tej Vardhan">
+            </div>
+            <div class="student-details">
+                <span>PRESIDENT</span>
+                <h3>T Tej Vardhan</h3>
+                <p>Rubix Club</p>
+                <a class="phone-link" href="tel:+917981094268">
+                    ☎ <span>+91 7981094268</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="student-card">
+            <div class="student-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/vice-president.jpeg') }}"
+                     alt="R Nikhil">
+            </div>
+            <div class="student-details">
+                <span>VICE PRESIDENT</span>
+                <h3>R Nikhil</h3>
+                <p>Rubix Club</p>
+                <a class="phone-link" href="tel:+919392596437">
+                    ☎ <span>+91 9392596437</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="student-card">
+            <div class="student-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/secretary.png') }}"
+                     alt="G Sravya Sri">
+            </div>
+            <div class="student-details">
+                <span>SECRETARY</span>
+                <h3>G Sravya Sri</h3>
+                <p>Rubix Club</p>
+                 <a class="phone-link" href="tel:+918247387391">
+                    ☎ <span>+91 8247387391</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="student-card">
+            <div class="student-photo">
+                <img src="{{ url_for('static', filename='images/coordinators/vice-secretary.jpeg') }}"
+                     alt="K Sai Saranya">
+            </div>
+            <div class="student-details">
+                <span>VICE SECRETARY</span>
+                <h3>K Sai Saranya</h3>
+                <p>Rubix Club</p>
+                <a class="phone-link" href="tel:+919346329124">
+                    ☎ <span>+91 9346329124</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="about-cta">
+    <div>
+        <span>READY TO BE PART OF IT?</span>
+        <h2>Build Something <strong>Different.</strong></h2>
+        <p>Join the Rubix community and turn your ideas into experiences.</p>
+    </div>
+
+    <a href="{{ url_for('events') }}" class="cta-button">
+        EXPLORE EVENTS →
+    </a>
+</section>
+
+<style>
+.about-hero {
+    min-height: 72vh;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:60px;
+    padding:100px 8%;
+    position:relative;
+    overflow:hidden;
+}
+.about-hero::before {
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:rgba(124,58,237,.15);
+    filter:blur(100px);
+    border-radius:50%;
+    left:-200px;
+    top:100px;
+}
+.about-hero-content {max-width:650px;position:relative;z-index:2;}
+.about-badge,.section-heading>span,.mission-card span,
+.leader-info span,.student-details span,.about-cta span {
+    color:#8b5cf6;font-size:12px;font-weight:800;letter-spacing:3px;
+}
+.about-hero h1 {
+    font-size:clamp(55px,8vw,105px);
+    line-height:.95;margin:25px 0;font-weight:900;letter-spacing:-5px;
+}
+.about-hero h1 span,.section-heading strong,.mission-card strong,.about-cta strong {
+    background:linear-gradient(90deg,#8b5cf6,#06b6d4);
+    background-clip:text;
+    -webkit-background-clip:text;color:transparent;
+}
+.about-hero p {color:#aab3c5;font-size:18px;line-height:1.8;max-width:600px;}
+
+.about-orbit {
+    width:360px;height:360px;position:relative;display:flex;
+    justify-content:center;align-items:center;
+}
+.orbit-ring {
+    position:absolute;border:1px solid rgba(139,92,246,.45);border-radius:50%;
+}
+.ring-one {width:280px;height:280px;animation:rotateOrbit 12s linear infinite;}
+.ring-two {
+    width:360px;height:180px;transform:rotate(-30deg);
+    border-color:rgba(6,182,212,.4);animation:rotateOrbitReverse 15s linear infinite;
+}
+.orbit-core {
+    width:130px;height:130px;border-radius:50%;
+    background:linear-gradient(135deg,#7c3aed,#06b6d4);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 50px rgba(124,58,237,.5),0 0 100px rgba(6,182,212,.2);
+}
+.orbit-core span {font-size:60px;font-weight:900;color:white;}
+@keyframes rotateOrbit {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes rotateOrbitReverse {from{transform:rotate(-30deg)}to{transform:rotate(-390deg)}}
+
+.about-section,.leadership-section,.student-leadership {padding:100px 8%;}
+.section-heading {max-width:750px;margin-bottom:55px;}
+.section-heading h2 {font-size:clamp(38px,5vw,65px);margin:15px 0;}
+.section-heading p {color:#9ca8bd;line-height:1.8;font-size:16px;}
+
+.about-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:25px;}
+.about-card {
+    padding:35px;border:1px solid rgba(139,92,246,.18);
+    background:rgba(255,255,255,.025);border-radius:22px;transition:.35s ease;
+}
+.about-card:hover {
+    transform:translateY(-10px);border-color:rgba(6,182,212,.5);
+    box-shadow:0 20px 50px rgba(0,0,0,.3);
+}
+.about-icon {font-size:38px;margin-bottom:25px;}
+.about-card h3 {font-size:24px;margin-bottom:12px;}
+.about-card p {color:#8f9bb0;line-height:1.8;}
+
+.mission-section {
+    padding:70px 8%;display:grid;grid-template-columns:1fr 1fr;gap:25px;
+}
+.mission-card {
+    padding:40px;border-radius:25px;
+    background:linear-gradient(145deg,rgba(124,58,237,.10),rgba(6,182,212,.04));
+    border:1px solid rgba(139,92,246,.2);display:flex;gap:25px;
+}
+.mission-number {font-size:35px;font-weight:900;color:rgba(139,92,246,.5);}
+.mission-card h2 {font-size:32px;margin:12px 0;}
+.mission-card p {color:#9ba7ba;line-height:1.8;}
+
+.leadership-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:30px;}
+.leader-card {
+    display:flex;align-items:center;gap:30px;padding:30px;border-radius:25px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.025);transition:.35s;
+}
+.leader-card:hover {
+    transform:translateY(-8px);border-color:#7c3aed;
+}
+.leader-photo {
+    width:160px;height:180px;border-radius:18px;overflow:hidden;
+    background:#111827;flex-shrink:0;
+}
+.leader-photo img,.student-photo img {
+    width:100%;height:100%;object-fit:cover;display:block;
+}
+.leader-info h3 {font-size:25px;margin:10px 0;}
+.leader-info p,.student-details p {color:#8995aa;margin:0 0 14px;}
+
+.phone-link {
+    display:inline-flex;align-items:center;gap:8px;
+    color:#67e8f9;text-decoration:none;font-size:14px;font-weight:700;
+    transition:.25s;
+}
+.phone-link:hover {color:#a78bfa;transform:translateX(3px);}
+
+.student-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.student-card {
+    overflow:hidden;border-radius:22px;border:1px solid rgba(139,92,246,.16);
+    background:rgba(255,255,255,.025);transition:.35s;
+}
+.student-card:hover {
+    transform:translateY(-10px);border-color:rgba(6,182,212,.6);
+}
+.student-photo {height:290px;background:#0b1020;}
+.student-details {padding:25px;}
+.student-details h3 {margin:10px 0 5px;font-size:22px;}
+
+.about-cta {
+    margin:80px 8%;padding:60px;border-radius:30px;
+    border:1px solid rgba(139,92,246,.3);
+    background:radial-gradient(circle at 80% 20%,rgba(6,182,212,.15),transparent 40%),rgba(124,58,237,.08);
+    display:flex;align-items:center;justify-content:space-between;gap:30px;
+}
+.about-cta h2 {font-size:42px;margin:15px 0;}
+.about-cta p {color:#9aa6b9;}
+.cta-button {
+    padding:16px 28px;border-radius:12px;
+    background:linear-gradient(90deg,#7c3aed,#06b6d4);
+    color:white;text-decoration:none;font-weight:800;white-space:nowrap;transition:.3s;
+}
+.cta-button:hover {transform:translateY(-4px);box-shadow:0 15px 40px rgba(124,58,237,.3);}
+
+@media (max-width:900px) {
+    .about-hero {flex-direction:column;text-align:center;padding-top:70px;}
+    .about-hero p {margin:auto;}
+    .about-grid,.mission-section,.leadership-grid {grid-template-columns:1fr;}
+    .student-grid {grid-template-columns:repeat(2,1fr);}
+    .about-orbit {transform:scale(.8);}
+    .about-cta {flex-direction:column;text-align:center;}
+}
+@media (max-width:600px) {
+    .about-hero,.about-section,.leadership-section,.student-leadership {
+        padding-left:5%;padding-right:5%;
+    }
+    .about-hero h1 {font-size:55px;}
+    .about-orbit {transform:scale(.65);margin-top:-30px;}
+    .student-grid {grid-template-columns:1fr;}
+    .leader-card {flex-direction:column;text-align:center;}
+    .about-cta {margin-left:5%;margin-right:5%;padding:35px 25px;}
+    .about-cta h2 {font-size:32px;}
+}
+</style>
+
+{% endblock %}

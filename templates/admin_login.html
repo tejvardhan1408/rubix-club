@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Login | Rubix Club</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(124, 58, 237, 0.20),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(6, 182, 212, 0.15),
+                    transparent 35%
+                ),
+                #070b1a;
+
+            color: white;
+        }
+
+
+        .login-card {
+
+            width: 420px;
+
+            max-width: 92%;
+
+            padding: 45px 35px;
+
+            border-radius: 24px;
+
+            background:
+                rgba(15, 23, 42, 0.88);
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    0.10
+                );
+
+            box-shadow:
+                0 30px 80px
+                rgba(0, 0, 0, 0.40);
+
+            backdrop-filter: blur(20px);
+        }
+
+
+        .logo {
+
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 25px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4
+                );
+
+            font-size: 32px;
+
+            font-weight: 900;
+        }
+
+
+        .login-card h1 {
+
+            text-align: center;
+
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #8f9ab7;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .form-group {
+
+            margin-bottom: 20px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #cdd4e7;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px 15px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid rgba(
+                    255,
+                    255,
+                    255,
+                    0.10
+                );
+
+            background:
+                rgba(0, 0, 0, 0.25);
+
+            color: white;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+
+        input:focus {
+
+            border-color: #22d3ee;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    34,
+                    211,
+                    238,
+                    0.08
+                );
+        }
+
+
+        .login-button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4
+                );
+
+            color: white;
+
+            font-weight: 800;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+
+        .login-button:hover {
+
+            opacity: 0.9;
+
+            transform: translateY(-1px);
+        }
+
+
+        .error {
+
+            padding: 12px;
+
+            margin-bottom: 20px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(239, 68, 68, 0.10);
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.25);
+
+            color: #fca5a5;
+
+            font-size: 13px;
+
+            text-align: center;
+        }
+
+
+        .back-home {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #8f9ab7;
+
+            text-decoration: none;
+
+            font-size: 13px;
+        }
+
+
+        .back-home:hover {
+
+            color: #22d3ee;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="login-card">
+
+        <div class="logo">
+            R
+        </div>
+
+
+        <h1>
+            Admin Login
+        </h1>
+
+
+        <p class="subtitle">
+            Rubix Club Management System
+        </p>
+
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="error">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            method="POST"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter admin username"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter admin password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                Login to Dashboard →
+            </button>
+
+        </form>
+
+
+        <a
+            href="/"
+            class="back-home"
+        >
+            ← Back to Website
+        </a>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manage Events | Rubix Club</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            background: #070b1a;
+
+            color: white;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        .container {
+
+            max-width: 1250px;
+
+            margin: auto;
+
+            padding: 45px 25px;
+        }
+
+
+        .top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+        }
+
+
+        h1 {
+
+            margin: 0;
+
+            font-size: 38px;
+        }
+
+
+        .top p {
+
+            color: #8f9ab7;
+
+            margin-top: 8px;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        a {
+
+            text-decoration: none;
+        }
+
+
+        .button {
+
+            padding: 11px 17px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .back {
+
+            color: #cbd5e1;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+
+        .add {
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4
+                );
+        }
+
+
+        .table-container {
+
+            overflow-x: auto;
+
+            border-radius: 18px;
+
+            background: #0d1328;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1050px;
+        }
+
+
+        th {
+
+            text-align: left;
+
+            padding: 18px;
+
+            color: #7f8aa6;
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        td {
+
+            padding: 18px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.05);
+
+            font-size: 13px;
+        }
+
+
+        tr:last-child td {
+
+            border-bottom: none;
+        }
+
+
+        .title {
+
+            font-weight: 700;
+        }
+
+
+        .category {
+
+            color: #67e8f9;
+        }
+
+
+        .status {
+
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            color: #67e8f9;
+
+            background:
+                rgba(34,211,238,0.08);
+
+            font-size: 11px;
+        }
+
+
+        /* ACTION BUTTONS */
+
+        .actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+
+        .edit-btn {
+
+            display: inline-block;
+
+            padding: 7px 11px;
+
+            border-radius: 7px;
+
+            color: #93c5fd;
+
+            background:
+                rgba(59,130,246,0.1);
+
+            border:
+                1px solid
+                rgba(59,130,246,0.15);
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .delete-btn {
+
+            padding: 7px 11px;
+
+            border-radius: 7px;
+
+            color: #fca5a5;
+
+            background:
+                rgba(239,68,68,0.08);
+
+            border:
+                1px solid
+                rgba(239,68,68,0.15);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .edit-btn:hover {
+
+            background:
+                rgba(59,130,246,0.18);
+        }
+
+
+        .delete-btn:hover {
+
+            background:
+                rgba(239,68,68,0.16);
+        }
+
+
+        .empty {
+
+            padding: 70px;
+
+            text-align: center;
+
+            color: #8f9ab7;
+        }
+
+
+        .empty h2 {
+
+            color: white;
+
+            margin-bottom: 8px;
+        }
+
+
+        @media(max-width:700px) {
+
+            .container {
+
+                padding: 30px 15px;
+            }
+
+
+            .top {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            h1 {
+
+                font-size: 30px;
+            }
+
+
+            .buttons {
+
+                width: 100%;
+            }
+
+
+            .button {
+
+                text-align: center;
+
+                flex: 1;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<main class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="top">
+
+        <div>
+
+            <h1>
+                Manage Events
+            </h1>
+
+            <p>
+                Create, edit and delete Rubix Club events.
+            </p>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="button back"
+            >
+                Dashboard
+            </a>
+
+
+            <a
+                href="{{ url_for('admin_add_event') }}"
+                class="button add"
+            >
+                + Add Event
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    {% if events %}
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>EVENT</th>
+
+                    <th>DATE</th>
+
+                    <th>VENUE</th>
+
+                    <th>CATEGORY</th>
+
+                    <th>TEAM SIZE</th>
+
+                    <th>STATUS</th>
+
+                    <th>ACTIONS</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for event in events %}
+
+                <tr>
+
+
+                    <td>
+                        {{ event.id }}
+                    </td>
+
+
+                    <td class="title">
+                        {{ event.title }}
+                    </td>
+
+
+                    <td>
+                        {{ event.event_date or "TBA" }}
+                    </td>
+
+
+                    <td>
+                        {{ event.venue or "TBA" }}
+                    </td>
+
+
+                    <td class="category">
+                        {{ event.category or "General" }}
+                    </td>
+
+
+                    <td>
+                        {{ event.team_size or "Individual" }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="status">
+                            {{ event.status or "upcoming" }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+
+                        <div class="actions">
+
+
+                            <!-- EDIT -->
+
+                            <a
+                                href="{{ url_for(
+                                    'admin_edit_event',
+                                    event_id=event.id
+                                ) }}"
+                                class="edit-btn"
+                            >
+                                Edit
+                            </a>
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                action="{{ url_for(
+                                    'admin_delete_event',
+                                    event_id=event.id
+                                ) }}"
+                                method="POST"
+                                onsubmit="return confirmDelete();"
+                                style="margin:0;"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="table-container">
+
+        <div class="empty">
+
+            <h2>
+                No Events Yet
+            </h2>
+
+            <p>
+                Your events table is currently empty.
+            </p>
+
+            <br>
+
+            <a
+                href="{{ url_for('admin_add_event') }}"
+                class="button add"
+            >
+                Create Your First Event
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% endif %}
+
+
+</main>
+
+
+
+<script>
+
+    function confirmDelete() {
+
+        return confirm(
+            "Are you sure you want to delete this event?\n\n" +
+            "All registrations for this event will also be deleted."
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

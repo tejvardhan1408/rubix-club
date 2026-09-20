@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event['title'] }} | Rubix Club{% endblock %}
+
+{% block content %}
+
+<section class="details-page">
+
+    <a href="{{ url_for('events') }}" class="back-link">← BACK TO EVENTS</a>
+
+    <div class="details-card">
+
+        <div class="details-image">
+            {% if event['image'] %}
+                <img src="{{ url_for('static', filename='uploads/' + event['image']) }}"
+                     alt="{{ event['title'] }}">
+            {% else %}
+                <div class="image-placeholder">R</div>
+            {% endif %}
+
+            <span class="status">
+                {{ (event['status'] or 'upcoming')|upper }}
+            </span>
+        </div>
+
+        <div class="details-content">
+
+            <span class="category">{{ event['category'] or 'RUBIX EVENT' }}</span>
+
+            <h1>{{ event['title'] }}</h1>
+
+            <p class="description">
+                {{ event['description'] or 'Join Rubix Club for this exciting event.' }}
+            </p>
+
+            <div class="meta-grid">
+
+                <div>
+                    <small>DATE</small>
+                    <strong>
+                        {% if event['event_date'] %}
+                            {{ event['event_date'].strftime('%d %B %Y') }}
+                        {% else %}
+                            DATE TBA
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>TIME</small>
+                    <strong>
+                        {% if event['event_time'] %}
+                            {{ (event['event_time'].total_seconds() // 3600)|int }}:{{ ((event['event_time'].total_seconds() // 60) % 60)|int|string|replace('0', '00') }}
+                        {% else %}
+                            TIME TBA
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div>
+                    <small>VENUE</small>
+                    <strong>{{ event['venue'] or 'TO BE ANNOUNCED' }}</strong>
+                </div>
+
+                <div>
+                    <small>TEAM SIZE</small>
+                    <strong>{{ event['team_size'] or 'INDIVIDUAL' }}</strong>
+                </div>
+
+            </div>
+
+            {% if event['rules'] %}
+            <div class="rules-box">
+                <h2>📋 Rules</h2>
+                <p>{{ event['rules'] }}</p>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+
+                {% if event['registration_link'] %}
+                    <a href="{{ event['registration_link'] }}" target="_blank" rel="noopener" class="register-btn">
+                        REGISTER NOW →
+                    </a>
+                {% endif %}
+
+                {% if event['registration_qr'] %}
+                    <div class="qr-box">
+                        <span>SCAN TO REGISTER</span>
+                        <img src="{{ url_for('static', filename='uploads/' + event['registration_qr']) }}"
+                             alt="Registration QR">
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+.details-page {
+    padding:90px 8% 120px;
+    min-height:75vh;
+}
+
+.back-link {
+    color:#67e8f9;
+    text-decoration:none;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.details-card {
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    overflow:hidden;
+    border:1px solid rgba(139,92,246,.2);
+    border-radius:30px;
+    background:rgba(255,255,255,.025);
+}
+
+.details-image {
+    min-height:550px;
+    position:relative;
+    background:#0b1020;
+}
+
+.details-image img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.image-placeholder {
+    height:100%;
+    min-height:550px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:150px;
+    font-weight:900;
+    color:#8b5cf6;
+    background:radial-gradient(circle,rgba(124,58,237,.3),rgba(5,8,22,.95));
+}
+
+.status {
+    position:absolute;
+    top:20px;
+    right:20px;
+    padding:8px 12px;
+    border-radius:8px;
+    background:rgba(5,8,22,.85);
+    color:#67e8f9;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.details-content {
+    padding:55px;
+}
+
+.category {
+    color:#8b5cf6;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.details-content h1 {
+    font-size:clamp(40px,5vw,70px);
+    line-height:1;
+    margin:18px 0;
+}
+
+.description {
+    color:#9ca8bd;
+    line-height:1.8;
+    font-size:16px;
+}
+
+.meta-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin:35px 0;
+}
+
+.meta-grid div {
+    padding:18px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:15px;
+    background:rgba(255,255,255,.02);
+}
+
+.meta-grid small {
+    display:block;
+    color:#59667c;
+    font-size:8px;
+    letter-spacing:2px;
+    margin-bottom:8px;
+}
+
+.meta-grid strong {
+    font-size:12px;
+    line-height:1.5;
+}
+
+.rules-box {
+    padding:22px;
+    border-left:3px solid #8b5cf6;
+    background:rgba(124,58,237,.06);
+    border-radius:10px;
+}
+
+.rules-box h2 {
+    font-size:18px;
+    margin-top:0;
+}
+
+.rules-box p {
+    color:#9ca8bd;
+    white-space:pre-line;
+    line-height:1.7;
+}
+
+.actions {
+    display:flex;
+    align-items:flex-start;
+    gap:25px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+.register-btn {
+    padding:16px 25px;
+    border-radius:12px;
+    background:linear-gradient(90deg,#7c3aed,#06b6d4);
+    color:#fff;
+    text-decoration:none;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.qr-box {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    color:#67e8f9;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.qr-box img {
+    width:130px;
+    height:130px;
+    object-fit:contain;
+    background:#fff;
+    padding:8px;
+    border-radius:10px;
+}
+
+@media(max-width:850px) {
+    .details-card {grid-template-columns:1fr;}
+    .details-image,.image-placeholder {min-height:350px;}
+}
+
+@media(max-width:600px) {
+    .details-page {padding:60px 5% 90px;}
+    .details-content {padding:30px 25px;}
+    .meta-grid {grid-template-columns:1fr;}
+}
+</style>
+
+{% endblock %}

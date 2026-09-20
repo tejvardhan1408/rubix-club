@@ -1,0 +1,1943 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register | {{ event.title }}
+{% endblock %}
+
+{% block content %}
+
+<section class="registration-page">
+
+    <!-- Background decorations -->
+
+    <div class="registration-glow glow-one"></div>
+    <div class="registration-glow glow-two"></div>
+
+
+    <div class="registration-wrapper">
+
+        <!-- Back -->
+
+        <a
+            href="{{ url_for('event_details', event_id=event.id) }}"
+            class="back-link"
+        >
+            ← Back to Event
+        </a>
+
+
+        <!-- Main Registration Card -->
+
+        <div class="registration-card">
+
+
+            <!-- =========================================
+                 HEADER
+            ========================================== -->
+
+            <div class="registration-header">
+
+                <div class="registration-label">
+                    ✦ RUBIX CLUB REGISTRATION
+                </div>
+
+
+                <h1>
+                    Join the
+                    <span>Challenge.</span>
+                </h1>
+
+
+                <p>
+                    Register your team and get ready to
+                    compete, think and conquer.
+                </p>
+
+
+                <!-- EVENT NAME -->
+
+                <div class="event-name-display">
+
+                    <small>
+                        REGISTERING FOR
+                    </small>
+
+                    <strong>
+                        {{ event.title }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     CAPACITY STATUS
+                ====================================== -->
+
+                <div
+                    class="capacity-panel
+                    {% if capacity_status == 'FULL' %}
+                        capacity-full
+                    {% elif capacity_status == 'ALMOST FULL' %}
+                        capacity-warning
+                    {% else %}
+                        capacity-open
+                    {% endif %}"
+                >
+
+                    <div class="capacity-left">
+
+                        <div
+                            class="capacity-status-dot"
+                        ></div>
+
+                        <div>
+
+                            <span class="capacity-label">
+                                REGISTRATION STATUS
+                            </span>
+
+                            <strong class="capacity-status">
+
+                                {% if capacity_status == "FULL" %}
+
+                                    REGISTRATION FULL
+
+                                {% elif capacity_status == "ALMOST FULL" %}
+
+                                    ALMOST FULL
+
+                                {% else %}
+
+                                    OPEN
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="capacity-right">
+
+                        <strong>
+                            {{ registered_teams }}
+                            /
+                            {{ event.max_teams or 30 }}
+                        </strong>
+
+                        <span>
+                            TEAMS
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REMAINING SPOTS -->
+
+                {% if capacity_status != "FULL" %}
+
+                    <div class="spots-message">
+
+                        <span>
+                            ✦
+                        </span>
+
+                        <strong>
+                            {{ remaining_teams }}
+                        </strong>
+
+                        spots remaining
+
+                    </div>
+
+                {% else %}
+
+                    <div class="spots-message spots-full">
+
+                        <span>
+                            ✦
+                        </span>
+
+                        Registration has reached the
+                        maximum team capacity.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- =========================================
+                 FORM
+            ========================================== -->
+
+            {% if capacity_status != "FULL" %}
+
+            <form
+                method="POST"
+                class="registration-form"
+            >
+
+
+                <!-- =====================================
+                     TEAM INFORMATION
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span class="section-number">
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Team Information
+                            </h2>
+
+                            <p>
+                                Create your team identity.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="team_name">
+
+                            Team Name
+
+                            <span>*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="team_name"
+                            name="team_name"
+                            placeholder="Enter your team name"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     TEAM LEADER
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span class="section-number">
+                            02
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Team Leader
+                            </h2>
+
+                            <p>
+                                Contact details of the team leader.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label for="participant_name">
+
+                            Full Name
+
+                            <span>*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="participant_name"
+                            name="participant_name"
+                            placeholder="Enter team leader name"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL + PHONE -->
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="email">
+
+                                Email Address
+
+                                <span>*</span>
+
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="example@gmail.com"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">
+
+                                Phone Number
+
+                                <span>*</span>
+
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="Enter phone number"
+                                maxlength="15"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     ACADEMIC DETAILS
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span class="section-number">
+                            03
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Academic Details
+                            </h2>
+
+                            <p>
+                                Tell us about your current year and section.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+
+                        <!-- YEAR -->
+
+                        <div class="form-group">
+
+                            <label for="year">
+
+                                Year
+
+                                <span>*</span>
+
+                            </label>
+
+                            <select
+                                id="year"
+                                name="year"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Year
+                                </option>
+
+                                <option value="1st Year">
+                                    1st Year
+                                </option>
+
+                                <option value="2nd Year">
+                                    2nd Year
+                                </option>
+
+                                <option value="3rd Year">
+                                    3rd Year
+                                </option>
+
+                                <option value="4th Year">
+                                    4th Year
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- SECTION -->
+
+                        <div class="form-group">
+
+                            <label for="section">
+
+                                Section
+
+                                <span>*</span>
+
+                            </label>
+
+                            <select
+                                id="section"
+                                name="section"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Section
+                                </option>
+
+                                <option value="A">
+                                    Section A
+                                </option>
+
+                                <option value="B">
+                                    Section B
+                                </option>
+
+                                <option value="C">
+                                    Section C
+                                </option>
+
+                                <option value="D">
+                                    Section D
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     TEAM MEMBERS
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span class="section-number">
+                            04
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Team Members
+                            </h2>
+
+                            <p>
+                                Add the remaining three members.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MEMBER 2 -->
+
+                    <div class="member-input">
+
+                        <div class="member-number">
+                            02
+                        </div>
+
+                        <div class="member-field">
+
+                            <label for="member_2">
+
+                                Member 2 Name
+
+                                <span>*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="member_2"
+                                name="member_2"
+                                placeholder="Enter member 2 name"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MEMBER 3 -->
+
+                    <div class="member-input">
+
+                        <div class="member-number">
+                            03
+                        </div>
+
+                        <div class="member-field">
+
+                            <label for="member_3">
+
+                                Member 3 Name
+
+                                <span>*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="member_3"
+                                name="member_3"
+                                placeholder="Enter member 3 name"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MEMBER 4 -->
+
+                    <div class="member-input">
+
+                        <div class="member-number">
+                            04
+                        </div>
+
+                        <div class="member-field">
+
+                            <label for="member_4">
+
+                                Member 4 Name
+
+                                <span>*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="member_4"
+                                name="member_4"
+                                placeholder="Enter member 4 name"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     SUBMIT AREA
+                ====================================== -->
+
+                <div class="registration-submit">
+
+                    <div class="submit-note">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            All four team members are required
+                            to complete registration.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="submit-registration"
+                    >
+
+                        <span>
+                            SUBMIT REGISTRATION
+                        </span>
+
+                        <strong>
+                            →
+                        </strong>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            {% else %}
+
+
+            <!-- =====================================
+                 FULL EVENT MESSAGE
+            ====================================== -->
+
+            <div class="registration-closed">
+
+                <div class="closed-icon">
+                    ×
+                </div>
+
+                <span>
+                    REGISTRATION CLOSED
+                </span>
+
+                <h2>
+                    This Event Is Full
+                </h2>
+
+                <p>
+                    The maximum number of teams for this event
+                    has already been reached.
+                </p>
+
+                <a
+                    href="{{ url_for('events') }}"
+                    class="browse-events-button"
+                >
+                    EXPLORE OTHER EVENTS →
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<style>
+
+/* =====================================================
+   REGISTRATION PAGE
+===================================================== */
+
+.registration-page {
+
+    min-height: 100vh;
+
+    padding: 70px 6% 100px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(124, 58, 237, 0.10),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(6, 182, 212, 0.08),
+            transparent 30%
+        );
+
+}
+
+
+/* =====================================================
+   BACKGROUND GLOWS
+===================================================== */
+
+.registration-glow {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(100px);
+
+    pointer-events: none;
+
+}
+
+
+.glow-one {
+
+    width: 400px;
+
+    height: 400px;
+
+    background: rgba(124, 58, 237, 0.08);
+
+    left: -220px;
+
+    top: 300px;
+
+}
+
+
+.glow-two {
+
+    width: 350px;
+
+    height: 350px;
+
+    background: rgba(6, 182, 212, 0.07);
+
+    right: -180px;
+
+    bottom: 150px;
+
+}
+
+
+/* =====================================================
+   WRAPPER
+===================================================== */
+
+.registration-wrapper {
+
+    max-width: 950px;
+
+    margin: auto;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+/* =====================================================
+   BACK LINK
+===================================================== */
+
+.back-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 25px;
+
+    color: #8995aa;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    transition: 0.3s;
+
+}
+
+
+.back-link:hover {
+
+    color: #a78bfa;
+
+    transform: translateX(-4px);
+
+}
+
+
+/* =====================================================
+   MAIN CARD
+===================================================== */
+
+.registration-card {
+
+    border: 1px solid rgba(139, 92, 246, 0.18);
+
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.015)
+        );
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.28);
+
+    overflow: hidden;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.registration-header {
+
+    padding: 55px 60px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    background:
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(6, 182, 212, 0.10),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 15% 0%,
+            rgba(124, 58, 237, 0.12),
+            transparent 35%
+        );
+
+}
+
+
+.registration-label {
+
+    display: inline-flex;
+
+    padding: 9px 15px;
+
+    border-radius: 50px;
+
+    border: 1px solid rgba(139, 92, 246, 0.3);
+
+    background: rgba(139, 92, 246, 0.08);
+
+    color: #a78bfa;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+}
+
+
+.registration-header h1 {
+
+    margin: 25px 0 12px;
+
+    font-size: clamp(42px, 6vw, 70px);
+
+    line-height: 0.95;
+
+    letter-spacing: -3px;
+
+    font-weight: 900;
+
+}
+
+
+.registration-header h1 span {
+
+    background:
+        linear-gradient(
+            90deg,
+            #8b5cf6,
+            #06b6d4
+        );
+
+    background-clip: text;
+
+    -webkit-background-clip: text;
+
+    color: transparent;
+
+}
+
+
+.registration-header > p {
+
+    max-width: 550px;
+
+    color: #8995aa;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =====================================================
+   EVENT NAME
+===================================================== */
+
+.event-name-display {
+
+    margin-top: 30px;
+
+    padding: 18px 20px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    background: rgba(255, 255, 255, 0.025);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.event-name-display small {
+
+    color: #59667c;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+}
+
+
+.event-name-display strong {
+
+    color: #e8ecf4;
+
+    font-size: 17px;
+
+}
+
+
+/* =====================================================
+   CAPACITY PANEL
+===================================================== */
+
+.capacity-panel {
+
+    margin-top: 15px;
+
+    padding: 17px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,255,255,0.07);
+
+    background: rgba(255,255,255,0.025);
+
+}
+
+
+.capacity-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.capacity-status-dot {
+
+    width: 10px;
+
+    height: 10px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+}
+
+
+.capacity-open .capacity-status-dot {
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 14px rgba(34,197,94,0.8);
+
+}
+
+
+.capacity-warning .capacity-status-dot {
+
+    background: #f59e0b;
+
+    box-shadow:
+        0 0 14px rgba(245,158,11,0.8);
+
+}
+
+
+.capacity-full .capacity-status-dot {
+
+    background: #ef4444;
+
+    box-shadow:
+        0 0 14px rgba(239,68,68,0.8);
+
+}
+
+
+.capacity-left div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+
+.capacity-label {
+
+    color: #59667c;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.capacity-status {
+
+    font-size: 11px;
+
+    letter-spacing: 1px;
+
+}
+
+
+.capacity-open .capacity-status {
+
+    color: #4ade80;
+
+}
+
+
+.capacity-warning .capacity-status {
+
+    color: #fbbf24;
+
+}
+
+
+.capacity-full .capacity-status {
+
+    color: #f87171;
+
+}
+
+
+.capacity-right {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.capacity-right strong {
+
+    color: #eef1f7;
+
+    font-size: 19px;
+
+    line-height: 1;
+
+}
+
+
+.capacity-right span {
+
+    color: #59667c;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+/* =====================================================
+   SPOTS MESSAGE
+===================================================== */
+
+.spots-message {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 10px;
+
+    color: #8f9bb0;
+
+    font-size: 10px;
+
+}
+
+
+.spots-message span {
+
+    color: #8b5cf6;
+
+}
+
+
+.spots-message strong {
+
+    color: #eef1f7;
+
+}
+
+
+.spots-full {
+
+    color: #f87171;
+
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.registration-form {
+
+    padding: 50px 60px 60px;
+
+}
+
+
+.form-section {
+
+    padding-bottom: 42px;
+
+    margin-bottom: 42px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+
+.form-section:last-of-type {
+
+    margin-bottom: 0;
+
+}
+
+
+.form-section-title {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+
+}
+
+
+.section-number {
+
+    width: 38px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    border: 1px solid rgba(139, 92, 246, 0.25);
+
+    background: rgba(139, 92, 246, 0.08);
+
+    color: #a78bfa;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+}
+
+
+.form-section-title h2 {
+
+    margin: 0 0 5px;
+
+    font-size: 21px;
+
+    color: #f1f3f7;
+
+}
+
+
+.form-section-title p {
+
+    margin: 0;
+
+    color: #69758b;
+
+    font-size: 12px;
+
+}
+
+
+/* =====================================================
+   FORM GROUP
+===================================================== */
+
+.form-group {
+
+    margin-bottom: 20px;
+
+}
+
+
+.form-group:last-child {
+
+    margin-bottom: 0;
+
+}
+
+
+.form-group label,
+.member-field label {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #b7c0d0;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+}
+
+
+.form-group label span,
+.member-field label span {
+
+    color: #a78bfa;
+
+}
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px 16px;
+
+    border-radius: 11px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: #eef1f7;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition: 0.3s;
+
+}
+
+
+.form-group input::placeholder {
+
+    color: #4f5b70;
+
+}
+
+
+.form-group input:hover,
+.form-group select:hover {
+
+    border-color: rgba(139, 92, 246, 0.3);
+
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: rgba(139, 92, 246, 0.7);
+
+    background: rgba(139, 92, 246, 0.045);
+
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.08);
+
+}
+
+
+.form-group select {
+
+    cursor: pointer;
+
+}
+
+
+.form-group select option {
+
+    background: #111827;
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   TWO COLUMN FORM
+===================================================== */
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+}
+
+
+/* =====================================================
+   TEAM MEMBER INPUT
+===================================================== */
+
+.member-input {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    background: rgba(255, 255, 255, 0.018);
+
+    transition: 0.3s;
+
+}
+
+
+.member-input:hover {
+
+    border-color: rgba(139, 92, 246, 0.25);
+
+    background: rgba(139, 92, 246, 0.025);
+
+}
+
+
+.member-number {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124, 58, 237, 0.2),
+            rgba(6, 182, 212, 0.1)
+        );
+
+    border: 1px solid rgba(139, 92, 246, 0.2);
+
+    color: #a78bfa;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+}
+
+
+.member-field {
+
+    flex: 1;
+
+}
+
+
+.member-field label {
+
+    margin-bottom: 7px;
+
+}
+
+
+.member-field input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.03);
+
+    color: #eef1f7;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition: 0.3s;
+
+}
+
+
+.member-field input::placeholder {
+
+    color: #4f5b70;
+
+}
+
+
+.member-field input:focus {
+
+    border-color: rgba(139, 92, 246, 0.7);
+
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.08);
+
+}
+
+
+/* =====================================================
+   SUBMIT AREA
+===================================================== */
+
+.registration-submit {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 25px;
+
+    padding-top: 10px;
+
+}
+
+
+.submit-note {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    max-width: 330px;
+
+}
+
+
+.submit-note span {
+
+    width: 25px;
+
+    height: 25px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(6, 182, 212, 0.1);
+
+    color: #67e8f9;
+
+    font-size: 12px;
+
+}
+
+
+.submit-note p {
+
+    margin: 0;
+
+    color: #69758b;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   SUBMIT BUTTON
+===================================================== */
+
+.submit-registration {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    padding: 16px 23px;
+
+    min-width: 220px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 12px 30px rgba(124, 58, 237, 0.22);
+
+    transition: 0.3s ease;
+
+}
+
+
+.submit-registration strong {
+
+    font-size: 18px;
+
+    font-weight: 400;
+
+}
+
+
+.submit-registration:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 18px 40px rgba(124, 58, 237, 0.35);
+
+}
+
+
+.submit-registration:active {
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =====================================================
+   REGISTRATION CLOSED
+===================================================== */
+
+.registration-closed {
+
+    padding: 70px 40px;
+
+    text-align: center;
+
+}
+
+
+.closed-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(239,68,68,0.08);
+
+    border: 1px solid rgba(239,68,68,0.25);
+
+    color: #f87171;
+
+    font-size: 38px;
+
+}
+
+
+.registration-closed > span {
+
+    color: #f87171;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+}
+
+
+.registration-closed h2 {
+
+    margin: 15px 0 10px;
+
+    font-size: 32px;
+
+}
+
+
+.registration-closed p {
+
+    max-width: 450px;
+
+    margin: 0 auto;
+
+    color: #8995aa;
+
+    line-height: 1.7;
+
+    font-size: 13px;
+
+}
+
+
+.browse-events-button {
+
+    display: inline-flex;
+
+    margin-top: 28px;
+
+    padding: 14px 22px;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+
+}
+
+
+.browse-events-button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 35px rgba(124,58,237,0.3);
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 750px) {
+
+    .registration-page {
+
+        padding: 45px 5% 70px;
+
+    }
+
+
+    .registration-header {
+
+        padding: 40px 25px;
+
+    }
+
+
+    .registration-form {
+
+        padding: 35px 25px 40px;
+
+    }
+
+
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+    }
+
+
+    .registration-submit {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+    .submit-note {
+
+        max-width: none;
+
+    }
+
+
+    .submit-registration {
+
+        width: 100%;
+
+    }
+
+
+    .capacity-panel {
+
+        align-items: flex-start;
+
+    }
+
+}
+
+
+@media(max-width: 480px) {
+
+    .registration-header h1 {
+
+        font-size: 42px;
+
+        letter-spacing: -2px;
+
+    }
+
+
+    .form-section-title {
+
+        gap: 12px;
+
+    }
+
+
+    .form-section-title h2 {
+
+        font-size: 18px;
+
+    }
+
+
+    .member-input {
+
+        padding: 10px;
+
+        gap: 10px;
+
+    }
+
+
+    .member-number {
+
+        width: 35px;
+
+        height: 35px;
+
+    }
+
+
+    .capacity-panel {
+
+        padding: 14px;
+
+    }
+
+
+    .capacity-right strong {
+
+        font-size: 16px;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

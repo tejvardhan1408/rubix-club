@@ -1,0 +1,806 @@
+{% extends "base.html" %}
+
+{% block title %}Resources | Rubix Admin{% endblock %}
+
+{% block content %}
+
+<style>
+    .resources-admin {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 24px 80px;
+        color: #fff;
+    }
+
+    .resources-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .eyebrow {
+        color: #22d3ee;
+        font-size: 0.76rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .resources-header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 900;
+        letter-spacing: -1px;
+        background: linear-gradient(90deg, #fff, #a5f3fc, #c4b5fd);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .resources-header p {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+
+    .add-resource-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #7c3aed, #0891b2);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 0.88rem;
+        transition: 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .add-resource-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 35px rgba(34, 211, 238, 0.18);
+    }
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 22px;
+        border: 1px solid #26304b;
+        border-radius: 17px;
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(124, 58, 237, 0.10),
+                transparent 40%
+            ),
+            #0b1120;
+    }
+
+    .stat-card::after {
+        content: "";
+        position: absolute;
+        right: -35px;
+        bottom: -35px;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: rgba(34, 211, 238, 0.04);
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .stat-number {
+        margin-top: 7px;
+        font-size: 2rem;
+        font-weight: 900;
+    }
+
+    .stat-description {
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 0.78rem;
+    }
+
+    /* =========================
+       FLASH
+    ========================= */
+
+    .flash-messages {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .flash {
+        padding: 13px 16px;
+        border-radius: 11px;
+        border: 1px solid;
+        font-size: 0.88rem;
+    }
+
+    .flash-success {
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.25);
+    }
+
+    .flash-error {
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.08);
+        border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    /* =========================
+       TOOLBAR
+    ========================= */
+
+    .resource-panel {
+        overflow: hidden;
+        border: 1px solid #26304b;
+        border-radius: 20px;
+        background: #0b1120;
+        box-shadow: 0 25px 70px rgba(0,0,0,0.20);
+    }
+
+    .resource-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 20px;
+        border-bottom: 1px solid #1e293b;
+        background: rgba(2, 6, 23, 0.35);
+    }
+
+    .toolbar-title h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+    .toolbar-title p {
+        margin: 4px 0 0;
+        color: #64748b;
+        font-size: 0.78rem;
+    }
+
+    .search-box {
+        width: 270px;
+    }
+
+    .search-box input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 13px;
+        border-radius: 10px;
+        border: 1px solid #334155;
+        background: #070c18;
+        color: #fff;
+        outline: none;
+    }
+
+    .search-box input:focus {
+        border-color: #22d3ee;
+        box-shadow: 0 0 0 3px rgba(34,211,238,0.08);
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    th {
+        padding: 15px 18px;
+        text-align: left;
+        color: #64748b;
+        font-size: 0.70rem;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: #080d1a;
+        border-bottom: 1px solid #1e293b;
+    }
+
+    td {
+        padding: 18px;
+        border-bottom: 1px solid #172033;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: 0.18s ease;
+    }
+
+    tbody tr:hover {
+        background: rgba(30, 41, 59, 0.28);
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .resource-title {
+        color: #f8fafc;
+        font-weight: 800;
+        font-size: 0.92rem;
+    }
+
+    .resource-description {
+        max-width: 350px;
+        margin-top: 5px;
+        color: #64748b;
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
+    .category-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #334155;
+        background: #111827;
+        color: #cbd5e1;
+        font-size: 0.72rem;
+        font-weight: 800;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.70rem;
+        font-weight: 900;
+    }
+
+    .status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    .status-published {
+        color: #86efac;
+        background: rgba(34,197,94,0.08);
+        border: 1px solid rgba(34,197,94,0.18);
+    }
+
+    .status-published::before {
+        background: #4ade80;
+    }
+
+    .status-draft {
+        color: #fbbf24;
+        background: rgba(245,158,11,0.08);
+        border: 1px solid rgba(245,158,11,0.18);
+    }
+
+    .status-draft::before {
+        background: #f59e0b;
+    }
+
+    .resource-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #67e8f9;
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .resource-link:hover {
+        color: #a5f3fc;
+        text-decoration: underline;
+    }
+
+    .date-text {
+        color: #64748b;
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 0 11px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.72rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.18s ease;
+    }
+
+    .edit-btn {
+        color: #a5f3fc;
+        border: 1px solid rgba(34,211,238,0.22);
+        background: rgba(34,211,238,0.06);
+    }
+
+    .edit-btn:hover {
+        background: rgba(34,211,238,0.12);
+    }
+
+    .delete-btn {
+        color: #fca5a5;
+        border: 1px solid rgba(239,68,68,0.20);
+        background: rgba(239,68,68,0.06);
+    }
+
+    .delete-btn:hover {
+        background: rgba(239,68,68,0.12);
+    }
+
+    .empty-state {
+        padding: 70px 25px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 62px;
+        height: 62px;
+        margin: 0 auto 18px;
+        display: grid;
+        place-items: center;
+        border-radius: 18px;
+        background: rgba(34,211,238,0.07);
+        border: 1px solid rgba(34,211,238,0.14);
+        font-size: 1.6rem;
+    }
+
+    .empty-state h3 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .empty-state p {
+        margin: 8px 0 20px;
+        color: #64748b;
+    }
+
+    @media (max-width: 800px) {
+
+        .resources-admin {
+            padding: 35px 15px 60px;
+        }
+
+        .resources-header {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .add-resource-btn {
+            width: 100%;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .resource-toolbar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<section class="resources-admin">
+
+    <!-- HEADER -->
+
+    <div class="resources-header">
+
+        <div>
+
+            <div class="eyebrow">
+                RUBIX • ADMIN CONTROL CENTER
+            </div>
+
+            <h1>Resources</h1>
+
+            <p>
+                Manage useful learning materials, tools and external resources
+                for RUBIX members.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('admin_add_resource') }}"
+            class="add-resource-btn"
+        >
+            + Add Resource
+        </a>
+
+    </div>
+
+
+    <!-- FLASH MESSAGES -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="flash-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="flash
+                        {% if category == 'success' %}
+                            flash-success
+                        {% else %}
+                            flash-error
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- STATISTICS -->
+
+    {% set total = resources|length %}
+    {% set published = resources|selectattr('status', 'equalto', 'published')|list|length %}
+    {% set drafts = resources|selectattr('status', 'equalto', 'draft')|list|length %}
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Total Resources
+            </div>
+
+            <div class="stat-number">
+                {{ total }}
+            </div>
+
+            <div class="stat-description">
+                All resources in the system
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Published
+            </div>
+
+            <div class="stat-number">
+                {{ published }}
+            </div>
+
+            <div class="stat-description">
+                Visible on the public website
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Drafts
+            </div>
+
+            <div class="stat-number">
+                {{ drafts }}
+            </div>
+
+            <div class="stat-description">
+                Saved but not publicly visible
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESOURCE PANEL -->
+
+    <div class="resource-panel">
+
+        <div class="resource-toolbar">
+
+            <div class="toolbar-title">
+
+                <h2>Resource Library</h2>
+
+                <p>
+                    Review, edit and manage your resources.
+                </p>
+
+            </div>
+
+            <div class="search-box">
+
+                <input
+                    type="search"
+                    id="resourceSearch"
+                    placeholder="Search resources..."
+                    onkeyup="filterResources()"
+                >
+
+            </div>
+
+        </div>
+
+
+        {% if resources %}
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Resource</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Link</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="resourceTable">
+
+                        {% for item in resources %}
+
+                            <tr>
+
+                                <!-- RESOURCE -->
+
+                                <td>
+
+                                    <div class="resource-title">
+                                        {{ item.title }}
+                                    </div>
+
+                                    {% if item.description %}
+
+                                        <div class="resource-description">
+                                            {{ item.description }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- CATEGORY -->
+
+                                <td>
+
+                                    {% if item.category %}
+
+                                        <span class="category-badge">
+                                            {{ item.category }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span style="color:#475569;">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    {% if item.status == 'published' %}
+
+                                        <span class="status-badge status-published">
+                                            Published
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge status-draft">
+                                            Draft
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- LINK -->
+
+                                <td>
+
+                                    <a
+                                        href="{{ item.resource_url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="resource-link"
+                                    >
+                                        Open ↗
+                                    </a>
+
+                                </td>
+
+
+                                <!-- CREATED -->
+
+                                <td>
+
+                                    <span class="date-text">
+                                        {{ item.created_at.strftime('%d %b %Y') if item.created_at else '—' }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <a
+                                            href="{{ url_for('admin_edit_resource', resource_id=item.id) }}"
+                                            class="action-btn edit-btn"
+                                        >
+                                            Edit
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('admin_delete_resource', resource_id=item.id) }}"
+                                            onsubmit="return confirm('Delete this resource? This action cannot be undone.');"
+                                            style="margin:0;"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn delete-btn"
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🔗
+                </div>
+
+                <h3>No Resources Yet</h3>
+
+                <p>
+                    Start building your resource library by adding your first resource.
+                </p>
+
+                <a
+                    href="{{ url_for('admin_add_resource') }}"
+                    class="add-resource-btn"
+                >
+                    + Add First Resource
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<script>
+function filterResources() {
+
+    const input = document.getElementById("resourceSearch");
+
+    const filter = input.value.toLowerCase();
+
+    const rows = document.querySelectorAll("#resourceTable tr");
+
+    rows.forEach(function(row) {
+
+        const text = row.innerText.toLowerCase();
+
+        if (text.includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
+</script>
+
+{% endblock %}

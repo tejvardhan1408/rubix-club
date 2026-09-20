@@ -1,0 +1,437 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | RUBIX Admin{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .result-form-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 50px 24px 80px;
+        color: #fff;
+    }
+
+    /* HEADER */
+
+    .form-header {
+        margin-bottom: 30px;
+    }
+
+    .form-header small {
+        display: block;
+        color: #8b7cff;
+        font-size: 11px;
+        letter-spacing: 3px;
+        font-weight: 800;
+        margin-bottom: 9px;
+    }
+
+    .form-header h1 {
+        margin: 0;
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .form-header p {
+        margin: 9px 0 0;
+        color: #8992ad;
+        font-size: 14px;
+    }
+
+    /* FORM CARD */
+
+    .form-card {
+        background:
+            linear-gradient(
+                145deg,
+                rgba(17,24,48,.96),
+                rgba(8,13,28,.96)
+            );
+
+        border: 1px solid rgba(255,255,255,.07);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 25px 70px rgba(0,0,0,.30);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .section-number {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: rgba(108,99,255,.14);
+        border: 1px solid rgba(108,99,255,.25);
+        color: #a9a3ff;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .section-title h2 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .section-title p {
+        margin: 3px 0 0;
+        color: #707b99;
+        font-size: 12px;
+    }
+
+    /* GRID */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .field.full {
+        grid-column: 1 / -1;
+    }
+
+    .field label {
+        color: #b8c0d5;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
+
+    .required {
+        color: #a78bfa;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid rgba(255,255,255,.09);
+        border-radius: 11px;
+        background: rgba(255,255,255,.035);
+        color: #fff;
+        padding: 13px 14px;
+        outline: none;
+        font-family: inherit;
+        font-size: 14px;
+        transition: .2s ease;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+        color: #59637d;
+    }
+
+    .field textarea {
+        min-height: 125px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .field select {
+        cursor: pointer;
+    }
+
+    .field select option {
+        background: #11172d;
+        color: #fff;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+        border-color: rgba(139,124,255,.65);
+        background: rgba(108,99,255,.055);
+        box-shadow: 0 0 0 3px rgba(108,99,255,.08);
+    }
+
+    .field-help {
+        color: #626d88;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    /* STATUS */
+
+    .status-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .status-option {
+        position: relative;
+    }
+
+    .status-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .status-option label {
+        display: block;
+        padding: 15px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 12px;
+        background: rgba(255,255,255,.025);
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .status-option label strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .status-option label span {
+        color: #707b99;
+        font-size: 11px;
+    }
+
+    .status-option input:checked + label {
+        border-color: rgba(108,99,255,.55);
+        background: rgba(108,99,255,.10);
+        box-shadow: 0 0 0 2px rgba(108,99,255,.06);
+    }
+
+    /* ACTIONS */
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255,255,255,.07);
+        flex-wrap: wrap;
+    }
+
+    .back-link {
+        color: #7f89a7;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .back-link:hover {
+        color: #fff;
+    }
+
+    .action-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        border-radius: 11px;
+        padding: 12px 19px;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        border: 1px solid rgba(255,255,255,.09);
+        background: rgba(255,255,255,.035);
+        color: #aeb6ca;
+    }
+
+    .save-btn {
+        border: 0;
+        color: #fff;
+        background: linear-gradient(135deg,#6c63ff,#8b5cf6);
+        box-shadow: 0 10px 28px rgba(108,99,255,.22);
+    }
+
+    .cancel-btn:hover {
+        background: rgba(255,255,255,.07);
+    }
+
+    .save-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 32px rgba(108,99,255,.32);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+        .result-form-page {
+            padding: 35px 16px 60px;
+        }
+
+        .form-header h1 {
+            font-size: 30px;
+        }
+
+        .form-card {
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .field.full {
+            grid-column: auto;
+        }
+
+        .status-options {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .action-right {
+            width: 100%;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            flex: 1;
+            text-align: center;
+        }
+    }
+
+</style>
+
+
+<section class="result-form-page">
+
+    <!-- HEADER -->
+
+    <div class="form-header">
+
+        <small>RUBIX ADMIN • RESULTS CENTER</small>
+
+        <h1>{{ page_title }}</h1>
+
+        {% if 'Edit' in page_title %}
+
+            <p>
+                Update the competition result and keep the leaderboard accurate.
+            </p>
+
+        {% else %}
+
+            <p>
+                Add a new competition result to the RUBIX results system.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <form method="POST" class="form-card">
+
+
+        <!-- BASIC INFORMATION -->
+
+        <div class="form-section">
+
+            <div class="section-title">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+                    <h2>Competition Information</h2>
+                    <p>Identify the event and winning team.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="field">
+
+                    <label>
+                        Event Name <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="event_name"
+                        value="{{ item.event_name if item else '' }}"
+                        placeholder="Example: Aptitude Auction"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Team Name <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="team_name"
+                        value="{{ item.team_name if item else '' }}"
+                        placeholder="Example: Brain Stormers"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Position <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="position_name"
+                        value="{{ item.position_name if item else '' }}"
+                        placeholder="Example: 1st Place"
+                        required
+                    >
+
+                    <span class="field-help">
+                        You can use 1st Place, 2nd Place, Winner, Runner-up, etc.
+                    </span>
+
+                </div>
+
+
+                <div class="field">
+```

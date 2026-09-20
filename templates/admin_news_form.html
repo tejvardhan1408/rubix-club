@@ -1,0 +1,669 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | Rubix Admin{% endblock %}
+
+{% block content %}
+
+<style>
+    .news-form-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 55px 24px 80px;
+        color: #fff;
+    }
+
+    .news-form-header {
+        margin-bottom: 30px;
+    }
+
+    .news-eyebrow {
+        color: #22d3ee;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .news-form-header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 900;
+        letter-spacing: -1px;
+        background: linear-gradient(90deg, #ffffff, #a5f3fc, #c4b5fd);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .news-form-header p {
+        margin-top: 10px;
+        color: #94a3b8;
+        font-size: 0.98rem;
+    }
+
+    .news-form-card {
+        background:
+            radial-gradient(circle at top right, rgba(124, 58, 237, 0.10), transparent 30%),
+            radial-gradient(circle at bottom left, rgba(8, 145, 178, 0.08), transparent 30%),
+            #0b1120;
+        border: 1px solid #26304b;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 25px 70px rgba(0,0,0,0.28);
+    }
+
+    .form-section {
+        padding: 30px;
+        border-bottom: 1px solid #1e293b;
+    }
+
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 24px;
+    }
+
+    .section-number {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #7c3aed, #0891b2);
+        font-size: 0.8rem;
+        font-weight: 900;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        font-size: 1.08rem;
+        font-weight: 800;
+    }
+
+    .section-heading p {
+        margin: 3px 0 0;
+        color: #64748b;
+        font-size: 0.82rem;
+    }
+
+    .field-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .field-full {
+        grid-column: 1 / -1;
+    }
+
+    .field label {
+        display: block;
+        margin-bottom: 8px;
+        color: #cbd5e1;
+        font-size: 0.86rem;
+        font-weight: 700;
+    }
+
+    .required {
+        color: #22d3ee;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 15px;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        background: #070c18;
+        color: #f8fafc;
+        font: inherit;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .field textarea {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.65;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+        border-color: #22d3ee;
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.10);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+        color: #475569;
+    }
+
+    .field-help {
+        margin-top: 7px;
+        color: #64748b;
+        font-size: 0.78rem;
+        line-height: 1.5;
+    }
+
+    .status-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .status-option {
+        position: relative;
+    }
+
+    .status-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .status-option label {
+        display: block;
+        padding: 17px;
+        border: 1px solid #334155;
+        border-radius: 13px;
+        background: #070c18;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .status-option label:hover {
+        border-color: #64748b;
+    }
+
+    .status-option input:checked + label {
+        border-color: #22d3ee;
+        background: rgba(34, 211, 238, 0.07);
+        box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.08);
+    }
+
+    .status-title {
+        display: block;
+        color: #f8fafc;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+
+    .status-description {
+        display: block;
+        color: #64748b;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 24px 30px;
+        background: rgba(2, 6, 23, 0.55);
+    }
+
+    .action-left,
+    .action-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 0.88rem;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: 0.2s ease;
+    }
+
+    .btn-primary {
+        color: white;
+        background: linear-gradient(135deg, #7c3aed, #0891b2);
+        box-shadow: 0 10px 30px rgba(34, 211, 238, 0.12);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 35px rgba(34, 211, 238, 0.18);
+    }
+
+    .btn-secondary {
+        color: #cbd5e1;
+        background: #111827;
+        border-color: #334155;
+    }
+
+    .btn-secondary:hover {
+        border-color: #64748b;
+        color: white;
+    }
+
+    .flash-messages {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .flash {
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 0.88rem;
+        border: 1px solid;
+    }
+
+    .flash-success {
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.08);
+        border-color: rgba(34, 197, 94, 0.25);
+    }
+
+    .flash-error {
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.08);
+        border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    @media (max-width: 700px) {
+        .news-form-page {
+            padding: 35px 15px 60px;
+        }
+
+        .form-section {
+            padding: 22px 18px;
+        }
+
+        .field-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .field-full {
+            grid-column: auto;
+        }
+
+        .status-options {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            padding: 20px 18px;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-left,
+        .action-right {
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+        }
+    }
+</style>
+
+<section class="news-form-page">
+
+    <!-- HEADER -->
+    <div class="news-form-header">
+
+        <div class="news-eyebrow">
+            RUBIX • ADMIN CONTROL CENTER
+        </div>
+
+        <h1>{{ page_title }}</h1>
+
+        <p>
+            Create and manage official RUBIX Club news and announcements.
+        </p>
+
+    </div>
+
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="flash-messages">
+
+                {% for category, message in messages %}
+
+                    <div class="flash
+                        {% if category == 'success' %}
+                            flash-success
+                        {% else %}
+                            flash-error
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- FORM -->
+    <form method="POST" class="news-form-card">
+
+
+        <!-- ==================================================
+             SECTION 01
+        =================================================== -->
+
+        <div class="form-section">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+                    <h2>Article Information</h2>
+                    <p>Set the headline and short description.</p>
+                </div>
+
+            </div>
+
+
+            <div class="field-grid">
+
+                <!-- TITLE -->
+
+                <div class="field field-full">
+
+                    <label for="title">
+                        Article Title
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        maxlength="200"
+                        value="{{ article.title or '' }}"
+                        placeholder="Enter a clear and engaging news title"
+                    >
+
+                    <div class="field-help">
+                        Keep the title short, clear and easy to understand.
+                    </div>
+
+                </div>
+
+
+                <!-- SUMMARY -->
+
+                <div class="field field-full">
+
+                    <label for="summary">
+                        Short Summary
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="summary"
+                        name="summary"
+                        required
+                        maxlength="500"
+                        rows="4"
+                        placeholder="Write a short introduction to this news article..."
+                    >{{ article.summary or '' }}</textarea>
+
+                    <div class="field-help">
+                        This summary can be displayed on the public news listing.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             SECTION 02
+        =================================================== -->
+
+        <div class="form-section">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+                    <h2>Article Content</h2>
+                    <p>Write the complete announcement or news article.</p>
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="content">
+                    Full Article
+                    <span class="required">*</span>
+                </label>
+
+                <textarea
+                    id="content"
+                    name="content"
+                    required
+                    rows="14"
+                    placeholder="Write the complete news article here..."
+                >{{ article.content or '' }}</textarea>
+
+                <div class="field-help">
+                    Include all important information such as dates, announcements,
+                    achievements, instructions or event updates.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             SECTION 03
+        =================================================== -->
+
+        <div class="form-section">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    03
+                </div>
+
+                <div>
+                    <h2>Media</h2>
+                    <p>Add an optional image for the article.</p>
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="image">
+                    Image URL
+                </label>
+
+                <input
+                    type="url"
+                    id="image"
+                    name="image"
+                    value="{{ article.image or '' }}"
+                    placeholder="https://example.com/news-image.jpg"
+                >
+
+                <div class="field-help">
+                    Optional. Use a publicly accessible image URL.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             SECTION 04
+        =================================================== -->
+
+        <div class="form-section">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    04
+                </div>
+
+                <div>
+                    <h2>Publication Status</h2>
+                    <p>Choose whether this article should be visible publicly.</p>
+                </div>
+
+            </div>
+
+
+            <div class="status-options">
+
+                <!-- DRAFT -->
+
+                <div class="status-option">
+
+                    <input
+                        type="radio"
+                        id="status-draft"
+                        name="status"
+                        value="draft"
+                        {% if not article or article.status != 'published' %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <label for="status-draft">
+
+                        <span class="status-title">
+                            Draft
+                        </span>
+
+                        <span class="status-description">
+                            Save the article without publishing it publicly.
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- PUBLISHED -->
+
+                <div class="status-option">
+
+                    <input
+                        type="radio"
+                        id="status-published"
+                        name="status"
+                        value="published"
+                        {% if article and article.status == 'published' %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <label for="status-published">
+
+                        <span class="status-title">
+                            Published
+                        </span>
+
+                        <span class="status-description">
+                            Make this article available on the public website.
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             ACTIONS
+        =================================================== -->
+
+        <div class="form-actions">
+
+            <div class="action-left">
+
+                <a
+                    href="{{ url_for('admin_news') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Back to News
+                </a>
+
+            </div>
+
+
+            <div class="action-right">
+
+                <a
+                    href="{{ url_for('admin_news') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    {% if page_title == 'Edit News' %}
+                        Save Changes
+                    {% else %}
+                        Add News
+                    {% endif %}
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
