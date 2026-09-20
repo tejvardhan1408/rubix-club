@@ -1,5 +1,6 @@
 import os
 import uuid
+import MySQLdb
 import requests
 
 from werkzeug.utils import secure_filename
@@ -24,20 +25,114 @@ app.secret_key = os.environ.get("SECRET_KEY", "development-secret-key")
 # MYSQL CONFIGURATION
 # ==========================================================
 
-app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-
-# Put your existing MySQL password here
+app.config["MYSQL_HOST"] = os.getenv("MYSQL_HOST", "localhost")
+app.config["MYSQL_USER"] = os.getenv("MYSQL_USER", "root")
 app.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD")
-
-app.config["MYSQL_DB"] = "rubix_club"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
-
+app.config["MYSQL_DB"] = os.getenv("MYSQL_DB", "rubix_club")
 mysql = MySQL(app)
 
 
 def get_db_connection():
     return mysql.connection
+
+
+class cursor:
+    """Small DB-API cursor adapter used by the application.
+
+    It keeps cursor creation in one place while exposing the standard cursor
+    operations used by Flask routes and safely delegates driver-specific
+    behaviour to the underlying MySQLdb cursor.
+    """
+
+    def __init__(self, connection, cursor_type=None):
+        self.connection = connection
+        self._cursor = connection.cursor(cursor_type) if cursor_type else connection.cursor()
+
+    @property
+    def arraysize(self):
+        return self._cursor.arraysize
+
+    @arraysize.setter
+    def arraysize(self, value):
+        self._cursor.arraysize = value
+
+    @property
+    def description(self):
+        return self._cursor.description
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+    @property
+    def lastrowid(self):
+        return self._cursor.lastrowid
+
+    @property
+    def rownumber(self):
+        return self._cursor.rownumber
+
+    def execute(self, operation, params=None):
+        return self._cursor.execute(operation, params)
+
+    def executemany(self, operation, seq_of_params):
+        return self._cursor.executemany(operation, seq_of_params)
+
+    def callproc(self, procname, args=()):
+        return self._cursor.callproc(procname, args)
+
+    def mogrify(self, operation, params=None):
+        return self._cursor.mogrify(operation, params)
+
+    def fetchone(self):
+        return self._cursor.fetchone()
+
+    def fetchmany(self, size=None):
+        return self._cursor.fetchmany() if size is None else self._cursor.fetchmany(size)
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+    def nextset(self):
+        return self._cursor.nextset()
+
+    def scroll(self, value, mode="relative"):
+        return self._cursor.scroll(value, mode)
+
+    def setinputsizes(self, sizes):
+        return self._cursor.setinputsizes(sizes)
+
+    def setoutputsize(self, size, column=None):
+        if column is None:
+            return self._cursor.setoutputsize(size)
+        return self._cursor.setoutputsize(size, column)
+
+    def close(self):
+        return self._cursor.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+        return False
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        row = self.fetchone()
+        if row is None:
+            raise StopIteration
+        return row
+
+    def next(self):
+        """Return the next result row for DB-API/Python 2-style callers."""
+        return self.__next__()
+
+    def __getattr__(self, name):
+        return getattr(self._cursor, name)
+
 
 GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbw-YBdHXt92qy5X-7chLPlBtvBUf9LYS4tMOCtk7J45_KszipWipZYzC-_4CllVJgKUnA/exec"
 
@@ -69,29 +164,29 @@ def admin_required():
 @app.route("/")
 def home():
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # HOME FEATURED PHOTO
     # ------------------------------------------------------
 
     home_gallery = [
-    {
-        "image": url_for("static", filename="images/home-banner.jpg"),
-        "title": "RUBIX CLUB",
-        "description": "Think. Solve. Conquer."
-    },
-    {
-        "image": url_for("static", filename="images/home-banner-2.jpg"),
-        "title": "APTITUDE AUCTION",
-        "description": "Challenge Your Thinking"
-    },
-    {
-        "image": url_for("static", filename="images/home-banner-3.jpg"),
-        "title": "RUBIX MOMENTS",
-        "description": "Memories That Stay"
-    }
-]
+        {
+            "image": url_for("static", filename="images/home-banner.jpg"),
+            "title": "RUBIX CLUB",
+            "description": "Think. Solve. Conquer."
+        },
+        {
+            "image": url_for("static", filename="images/home-banner-2.jpg"),
+            "title": "APTITUDE AUCTION",
+            "description": "Challenge Your Thinking"
+        },
+        {
+            "image": url_for("static", filename="images/home-banner-3.jpg"),
+            "title": "RUBIX MOMENTS",
+            "description": "Memories That Stay"
+        }
+    ]
     # ------------------------------------------------------
     # UPCOMING EVENTS
     # ------------------------------------------------------
@@ -139,7 +234,7 @@ def about():
 @app.route("/events")
 def events():
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     cursor.execute("""
         SELECT
@@ -231,7 +326,7 @@ def events():
 @app.route("/event/<int:event_id>")
 def event_details(event_id):
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     cursor.execute("""
         SELECT
@@ -308,30 +403,22 @@ def event_details(event_id):
 @app.route("/gallery")
 def gallery():
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    # ------------------------------------------------------
-    # GET GALLERIES
-    # ------------------------------------------------------
-
+    # Get all galleries
     cursor.execute("""
         SELECT
             id,
             title,
             description,
-            cover_image,
-            event_id,
-            created_at
+            cover_image
         FROM gallery
         ORDER BY id DESC
     """)
 
     galleries = cursor.fetchall()
 
-    # ------------------------------------------------------
-    # GET GALLERY IMAGES
-    # ------------------------------------------------------
-
+    # Get all gallery images
     cursor.execute("""
         SELECT
             id,
@@ -351,7 +438,6 @@ def gallery():
         galleries=galleries,
         gallery_images=gallery_images
     )
-
 # ==========================================================
 # EVENT REGISTRATION
 # ==========================================================
@@ -359,7 +445,7 @@ def gallery():
 @app.route("/register/<int:event_id>", methods=["GET", "POST"])
 def register_event(event_id):
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # GET EVENT DETAILS
@@ -858,7 +944,7 @@ def register_event(event_id):
 @app.route("/registration-success/<int:event_id>")
 def registration_success(event_id):
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     cursor.execute("""
         SELECT title
@@ -1612,7 +1698,7 @@ def admin_dashboard():
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # TOTAL EVENTS
@@ -1700,7 +1786,7 @@ def ensure_news_table(cursor):
 
 @app.route("/news")
 def news():
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("""
         SELECT id, title, summary, content, image, published_at, created_at
@@ -1714,7 +1800,7 @@ def news():
 
 @app.route("/news/<int:news_id>")
 def news_details(news_id):
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("""
         SELECT id, title, summary, content, image, published_at, created_at
@@ -1731,7 +1817,7 @@ def news_details(news_id):
 def admin_news():
     if not admin_required():
         return redirect(url_for("admin_login"))
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("""
         SELECT id, title, summary, status, created_at, published_at
@@ -1755,7 +1841,7 @@ def admin_add_news():
         if not title or not summary or not content or status not in ("draft", "published"):
             flash("Please complete all required fields.", "error")
             return render_template("admin_news_form.html", article=request.form, page_title="Add News")
-        cursor = mysql.connection.cursor()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         ensure_news_table(cursor)
         cursor.execute("""
             INSERT INTO news (title, summary, content, image, status, published_at)
@@ -1772,7 +1858,7 @@ def admin_add_news():
 def admin_edit_news(news_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("SELECT * FROM news WHERE id = %s", (news_id,))
     article = cursor.fetchone()
@@ -1808,7 +1894,7 @@ def admin_edit_news(news_id):
 def admin_delete_news(news_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("DELETE FROM news WHERE id = %s", (news_id,))
     mysql.connection.commit()
@@ -1821,7 +1907,7 @@ def admin_delete_news(news_id):
 def admin_toggle_news(news_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_news_table(cursor)
     cursor.execute("""
         UPDATE news SET
@@ -1851,7 +1937,7 @@ def admin_gallery():
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # CREATE GALLERY
@@ -1997,7 +2083,7 @@ def admin_gallery_add_image(gallery_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # Check whether gallery exists
     cursor.execute(
@@ -2102,7 +2188,7 @@ def admin_delete_gallery_image(image_id):
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     # ==========================================================
 # DELETE ENTIRE GALLERY
 # ==========================================================
@@ -2116,7 +2202,7 @@ def admin_delete_gallery(gallery_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # GET ALL IMAGES BELONGING TO THIS GALLERY
@@ -2285,7 +2371,7 @@ def admin_delete_gallery(gallery_id):
             url_for("admin_gallery")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # CHECK GALLERY EXISTS
@@ -2409,7 +2495,7 @@ def admin_events():
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     cursor.execute("""
         SELECT
@@ -2531,7 +2617,7 @@ def admin_add_event():
                 "admin_add_event.html"
             )
 
-        cursor = mysql.connection.cursor()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
         cursor.execute("""
             INSERT INTO events
@@ -2599,7 +2685,7 @@ def admin_edit_event(event_id):
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # GET EXISTING EVENT
@@ -2770,7 +2856,7 @@ def admin_delete_event(event_id):
             url_for("admin_login")
         )
 
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # ------------------------------------------------------
     # DELETE REGISTRATIONS FIRST
@@ -2812,7 +2898,7 @@ def test_database():
 
     try:
 
-        cursor = mysql.connection.cursor()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
         cursor.execute(
             "SELECT DATABASE() AS database_name"
@@ -2864,7 +2950,7 @@ def ensure_results_table(cursor):
 
 @app.route('/results')
 def results():
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_results_table(cursor)
     cursor.execute("SELECT * FROM results WHERE status='published' ORDER BY created_at DESC, id DESC")
     rows = cursor.fetchall()
@@ -2875,7 +2961,7 @@ def results():
 def admin_results():
     if not admin_required():
         return redirect(url_for('admin_login'))
-    cursor = mysql.connection.cursor()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     ensure_results_table(cursor)
     cursor.execute("SELECT * FROM results ORDER BY created_at DESC, id DESC")
     rows = cursor.fetchall()
@@ -2893,7 +2979,7 @@ def admin_add_result():
         if not all([event_name, team_name, position_name]):
             flash('Event, team name, and position are required.', 'error')
             return render_template('admin_result_form.html', item=request.form, page_title='Add Result')
-        cursor = mysql.connection.cursor()
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         ensure_results_table(cursor)
         cursor.execute("INSERT INTO results (event_name,team_name,position_name,members,score,details,status) VALUES (%s,%s,%s,%s,%s,%s,%s)", (
             event_name, team_name, position_name, request.form.get('members','').strip(), request.form.get('score','').strip(), request.form.get('details','').strip(), request.form.get('status','published') if request.form.get('status') in ('published','draft') else 'published'))
@@ -2906,7 +2992,7 @@ def admin_add_result():
 def admin_edit_result(result_id):
     if not admin_required():
         return redirect(url_for('admin_login'))
-    cursor = mysql.connection.cursor(); ensure_results_table(cursor)
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor); ensure_results_table(cursor)
     cursor.execute('SELECT * FROM results WHERE id=%s', (result_id,)); item=cursor.fetchone()
     if not item:
         cursor.close(); flash('Result not found.', 'error'); return redirect(url_for('admin_results'))
@@ -2945,15 +3031,31 @@ def ensure_resources_table(cursor):
 
 @app.route('/resources')
 def resources():
-    cursor=mysql.connection.cursor(); ensure_resources_table(cursor)
-    cursor.execute("SELECT * FROM resources WHERE status='published' ORDER BY created_at DESC, id DESC")
-    rows=cursor.fetchall(); cursor.close()
-    return render_template('resources.html', resources=rows)
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    ensure_resources_table(cursor)
+
+    cursor.execute("""
+        SELECT *
+        FROM resources
+        WHERE status = 'published'
+        ORDER BY created_at DESC, id DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+        'resources.html',
+        resources=rows
+    )
 
 @app.route('/admin/resources')
 def admin_resources():
     if not admin_required(): return redirect(url_for('admin_login'))
-    cursor=mysql.connection.cursor(); ensure_resources_table(cursor)
+    cursor=mysql.connection.cursor(MySQLdb.cursors.DictCursor); ensure_resources_table(cursor)
     cursor.execute('SELECT * FROM resources ORDER BY created_at DESC, id DESC'); rows=cursor.fetchall(); cursor.close()
     return render_template('admin_resources.html', resources=rows)
 
@@ -2966,7 +3068,7 @@ def admin_add_resource():
             flash('Resource title and URL are required.', 'error')
             return render_template('admin_resource_form.html', item=request.form, page_title='Add Resource')
         status=request.form.get('status','published'); status=status if status in ('published','draft') else 'published'
-        cursor=mysql.connection.cursor(); ensure_resources_table(cursor)
+        cursor=mysql.connection.cursor(MySQLdb.cursors.DictCursor); ensure_resources_table(cursor)
         cursor.execute('INSERT INTO resources (title,description,category,resource_url,status) VALUES (%s,%s,%s,%s,%s)',(title,request.form.get('description','').strip(),request.form.get('category','').strip(),resource_url,status))
         mysql.connection.commit(); cursor.close(); flash('Resource added successfully.', 'success'); return redirect(url_for('admin_resources'))
     return render_template('admin_resource_form.html', item={}, page_title='Add Resource')
@@ -2974,7 +3076,7 @@ def admin_add_resource():
 @app.route('/admin/resources/<int:resource_id>/edit', methods=['GET','POST'])
 def admin_edit_resource(resource_id):
     if not admin_required(): return redirect(url_for('admin_login'))
-    cursor=mysql.connection.cursor(); ensure_resources_table(cursor); cursor.execute('SELECT * FROM resources WHERE id=%s',(resource_id,)); item=cursor.fetchone()
+    cursor=mysql.connection.cursor(MySQLdb.cursors.DictCursor); ensure_resources_table(cursor); cursor.execute('SELECT * FROM resources WHERE id=%s',(resource_id,)); item=cursor.fetchone()
     if not item:
         cursor.close(); flash('Resource not found.', 'error'); return redirect(url_for('admin_resources'))
     if request.method=='POST':
@@ -2990,7 +3092,7 @@ def admin_edit_resource(resource_id):
 @app.route('/admin/resources/<int:resource_id>/delete', methods=['POST'])
 def admin_delete_resource(resource_id):
     if not admin_required(): return redirect(url_for('admin_login'))
-    cursor=mysql.connection.cursor(); ensure_resources_table(cursor); cursor.execute('DELETE FROM resources WHERE id=%s',(resource_id,)); mysql.connection.commit(); cursor.close()
+    cursor=mysql.connection.cursor(MySQLdb.cursors.DictCursor); ensure_resources_table(cursor); cursor.execute('DELETE FROM resources WHERE id=%s',(resource_id,)); mysql.connection.commit(); cursor.close()
     flash('Resource deleted.', 'success'); return redirect(url_for('admin_resources'))
 
 # ==========================================================
