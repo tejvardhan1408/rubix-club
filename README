@@ -1,0 +1,624 @@
+# RUBIX Club Website
+
+## 📌 About the Project
+
+RUBIX Club Website is a college event management website developed for the **RUBIX Club**.
+
+The website provides information about club events, registrations, results, gallery, news, and useful resources.
+
+The project was developed using **Python Flask, HTML, CSS, JavaScript, and MySQL** and deployed online using **Render** with **Aiven MySQL**.
+
+---
+
+## 🎯 Project Objectives
+
+The main objectives of the project are:
+
+* Provide a professional website for RUBIX Club.
+* Display upcoming and completed events.
+* Allow students to register for events.
+* Support team registration with 4 members.
+* Store registration data in MySQL.
+* Send registration information to Google Sheets.
+* Display event results.
+* Manage gallery images.
+* Publish club news and resources.
+* Provide an admin dashboard for managing website content.
+* Deploy the website online so it can be accessed from any device.
+
+---
+
+# 🛠️ Technologies Used
+
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+
+### Backend
+
+* Python
+* Flask
+
+### Database
+
+* MySQL
+* Aiven MySQL for production
+
+### Other Services
+
+* Google Sheets / Google Apps Script
+* Git
+* GitHub
+* Render
+
+### Deployment
+
+* Render Web Service
+* Gunicorn
+
+---
+
+# 📁 Project Structure
+
+The main project structure is:
+
+```text
+RUBIX CLUB OFFICIAL WEBSITE/
+│
+├── app.py
+├── requirements.txt
+├── Procfile
+├── .gitignore
+│
+├── certs/
+│   └── ca.pem
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── about.html
+│   ├── events.html
+│   ├── event_details.html
+│   ├── register.html
+│   ├── gallery.html
+│   ├── news.html
+│   ├── results.html
+│   ├── resources.html
+│   └── admin templates...
+│
+└── static/
+    ├── css/
+    ├── js/
+    ├── images/
+    └── uploads/
+```
+
+---
+
+# 🏠 Home Page
+
+The Home page contains the main introduction to RUBIX Club.
+
+It includes:
+
+* RUBIX Club branding
+* Event information
+* Navigation
+* Featured content
+* Event sections
+* Club information
+* Three main RUBIX images
+
+The home images include:
+
+* RUBIX CLUB
+* APTITUDE AUCTION
+* RUBIX MOMENTS
+
+---
+
+# ℹ️ About Page
+
+The About page provides information about the RUBIX Club.
+
+It includes:
+
+* Who We Are
+* Mission
+* Vision
+* Innovation
+* Knowledge
+* Community
+* Faculty Leadership
+* Student Leadership
+
+The leadership section includes:
+
+* HOD
+* Faculty Coordinator
+* President
+* Vice President
+* Secretary
+* Vice Secretary
+
+---
+
+# 📅 Events System
+
+The website has a dynamic Events system.
+
+Events are stored in the MySQL database.
+
+Each event can contain information such as:
+
+* Event title
+* Description
+* Date
+* Time
+* Venue
+* Rules
+* Maximum teams
+* Registration status
+
+The system also calculates the registration capacity.
+
+Possible statuses include:
+
+* OPEN
+* ALMOST FULL
+* FULL
+
+The number of registered teams is compared with the maximum team capacity.
+
+---
+
+# 📝 Team Registration
+
+The website supports **team registration**.
+
+Each team must have:
+
+* Team Name
+* Member 1
+* Member 2
+* Member 3
+* Member 4
+
+Therefore, each team contains exactly **4 members**.
+
+The registration system:
+
+1. Receives the team information.
+2. Validates the form.
+3. Checks the event.
+4. Stores the registration in MySQL.
+5. Sends registration information to Google Sheets.
+6. Shows a registration success page.
+7. Updates the registration count.
+
+---
+
+# 🗄️ MySQL Database
+
+The project uses MySQL for storing website data.
+
+The main database contains tables for different website features.
+
+Examples include:
+
+```text
+events
+event_registrations
+gallery
+gallery_images
+results
+resources
+news
+```
+
+The local development database was:
+
+```text
+rubix_club
+```
+
+For production deployment, the database was moved to:
+
+```text
+Aiven MySQL
+```
+
+The production database is:
+
+```text
+defaultdb
+```
+
+---
+
+# 🖼️ Gallery System
+
+The website contains a RUBIX Memory Gallery.
+
+The gallery supports:
+
+* Gallery events
+* Gallery descriptions
+* Cover images
+* Multiple images
+* Image uploads
+* Image deletion
+* Full-screen image viewing
+
+Images uploaded through the admin panel are stored in:
+
+```text
+static/uploads/gallery/
+```
+
+The gallery is connected to the MySQL database through the `gallery` and `gallery_images` tables.
+
+---
+
+# 🏆 Results System
+
+The Results system allows administrators to publish event results.
+
+A result can contain:
+
+* Event name
+* Team name
+* Position
+* Members
+* Score
+* Details
+* Published/Draft status
+
+Administrators can:
+
+* Add results
+* Edit results
+* Delete results
+* Publish results
+* Keep results as drafts
+
+The public Results page displays published results.
+
+---
+
+# 📰 News System
+
+The website includes a News section.
+
+Administrators can create news articles with information such as:
+
+* Title
+* Content
+* Publication status
+* Date
+
+The admin panel allows administrators to manage the news content.
+
+The public website displays published news.
+
+---
+
+# 📚 Resources System
+
+The Resources section provides useful links and learning materials.
+
+Each resource can contain:
+
+* Title
+* Description
+* Category
+* Resource URL
+* Published/Draft status
+
+Administrators can:
+
+* Add resources
+* Edit resources
+* Delete resources
+* Publish or keep them as drafts
+
+---
+
+# 🔐 Admin Panel
+
+The project includes an admin section for managing website content.
+
+The admin panel provides management for:
+
+* Events
+* Registrations
+* Gallery
+* Results
+* News
+* Resources
+* Dashboard information
+
+The admin dashboard also displays information such as event and registration counts.
+
+---
+
+# 🔧 Important Backend Fixes
+
+During development, several backend issues were fixed.
+
+One major issue was MySQL returning database rows as tuples while the application expected dictionary-style rows.
+
+The project was standardized to use:
+
+```python
+MySQLdb.cursors.DictCursor
+```
+
+This fixed errors such as:
+
+```text
+TypeError: tuple indices must be integers or slices, not str
+```
+
+and:
+
+```text
+'tuple object' has no attribute 'id'
+```
+
+This was important because templates use values such as:
+
+```python
+event["id"]
+event["title"]
+```
+
+---
+
+# 🔒 Security Improvements
+
+The Flask secret key was changed from a hardcoded value to an environment variable.
+
+The application uses:
+
+```python
+os.getenv("SECRET_KEY")
+```
+
+Sensitive information such as:
+
+* Database password
+* Secret key
+* Other credentials
+
+should not be stored directly in the source code.
+
+The `.gitignore` file also prevents sensitive/local files from being committed.
+
+---
+
+# 🌐 Google Sheets Integration
+
+The registration system uses a Google Apps Script Web App to send registration information to Google Sheets.
+
+The application uses the environment variable:
+
+```text
+GOOGLE_SHEETS_URL
+```
+
+This allows the Google Sheets URL to be configured without hardcoding it into deployment settings.
+
+---
+
+# ☁️ Production Database – Aiven
+
+For online deployment, the project uses **Aiven MySQL**.
+
+The production database configuration uses environment variables:
+
+```text
+MYSQL_HOST
+MYSQL_PORT
+MYSQL_USER
+MYSQL_PASSWORD
+MYSQL_DB
+```
+
+The Aiven MySQL service requires SSL/TLS.
+
+Therefore, an Aiven CA certificate was added to:
+
+```text
+certs/ca.pem
+```
+
+The Flask application uses this certificate when connecting to the production database.
+
+---
+
+# 🚀 GitHub
+
+The project was uploaded to GitHub.
+
+Repository:
+
+```text
+https://github.com/tejvardhan1408/rubix-club
+```
+
+The main branch used for deployment is:
+
+```text
+master
+```
+
+The normal update process is:
+
+```bash
+git add .
+git commit -m "Update website"
+git push origin master
+```
+
+---
+
+# 📦 Requirements
+
+The project uses a `requirements.txt` file containing the Python dependencies required by the application.
+
+Important packages include:
+
+```text
+Flask
+Flask-MySQLdb
+gspread
+oauth2client
+python-dotenv
+gunicorn
+requests
+```
+
+The `requests` package was added after Render reported:
+
+```text
+ModuleNotFoundError: No module named 'requests'
+```
+
+---
+
+# 🚀 Deployment
+
+The website was deployed using **Render**.
+
+Render configuration:
+
+### Build Command
+
+```text
+pip install -r requirements.txt
+```
+
+### Start Command
+
+```text
+gunicorn app:app
+```
+
+### Branch
+
+```text
+master
+```
+
+Gunicorn is used on Render because Render runs the application in a Linux environment.
+
+For local Windows development, the application is started using:
+
+```bash
+python app.py
+```
+
+Gunicorn is not used for local Windows testing because it requires the Unix/Linux `fcntl` module.
+
+---
+
+# 🔑 Render Environment Variables
+
+The production application uses environment variables for configuration.
+
+Important variables include:
+
+```text
+MYSQL_HOST
+MYSQL_PORT
+MYSQL_USER
+MYSQL_PASSWORD
+MYSQL_DB
+SECRET_KEY
+GOOGLE_SHEETS_URL
+```
+
+Sensitive values such as database passwords and secret keys are entered directly into Render and should not be published in GitHub.
+
+---
+
+# 🔄 How Website Updates Work
+
+After deployment, the website can be modified at any time.
+
+The normal workflow is:
+
+```text
+Modify Code
+     ↓
+Test Locally
+     ↓
+git add .
+     ↓
+git commit
+     ↓
+git push origin master
+     ↓
+GitHub
+     ↓
+Render Automatically Deploys
+     ↓
+Updated Live Website
+```
+
+The computer does not need to remain switched on for the deployed website to stay online.
+
+---
+
+# ✅ Final Project Features
+
+The completed RUBIX Club website includes:
+
+* ✅ Professional dark-themed design
+* ✅ Responsive website
+* ✅ Home page
+* ✅ About page
+* ✅ Events system
+* ✅ Event details
+* ✅ Team registration
+* ✅ Four-member team validation
+* ✅ MySQL database
+* ✅ Google Sheets registration integration
+* ✅ Registration capacity tracking
+* ✅ Gallery
+* ✅ Gallery image upload
+* ✅ Gallery image deletion
+* ✅ Results system
+* ✅ News system
+* ✅ Resources system
+* ✅ Admin dashboard
+* ✅ Admin management pages
+* ✅ Secure environment variables
+* ✅ GitHub repository
+* ✅ Aiven production database
+* ✅ SSL database connection
+* ✅ Render deployment
+* ✅ Automatic deployment from GitHub
+
+---
+
+# 🎯 Project Status
+
+The RUBIX Club website has been successfully:
+
+**Developed → Tested → Connected to Database → Uploaded to GitHub → Connected to Aiven → Configured for SSL → Deployed on Render**
+
+The website is now available as a live web application and can continue to be modified and improved through the GitHub → Render deployment workflow.
+
+---
+
+## 👩‍💻 Project Developed By
+
+**Siri Varsha**
+
+B.Tech – Computer Science and Engineering
+
+**RUBIX Club Website Project**

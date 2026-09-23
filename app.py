@@ -2177,7 +2177,7 @@ def admin_gallery_add_image(gallery_id):
     flash("Image uploaded successfully.", "success")
 
     return redirect(url_for("admin_gallery"))
-    # ==========================================================
+   # ==========================================================
 # DELETE GALLERY IMAGE
 # ==========================================================
 
@@ -2188,13 +2188,71 @@ def admin_gallery_add_image(gallery_id):
 def admin_delete_gallery_image(image_id):
 
     if not admin_required():
-
-        return redirect(
-            url_for("admin_login")
-        )
+        return redirect(url_for("admin_login"))
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    # ==========================================================
+
+    # ------------------------------------------------------
+    # GET IMAGE
+    # ------------------------------------------------------
+
+    cursor.execute("""
+        SELECT id, image
+        FROM gallery_images
+        WHERE id = %s
+    """, (image_id,))
+
+    image = cursor.fetchone()
+
+    if not image:
+        cursor.close()
+
+        flash("Image not found.", "error")
+
+        return redirect(
+            url_for("admin_gallery")
+        )
+
+    # ------------------------------------------------------
+    # DELETE IMAGE FILE FROM COMPUTER
+    # ------------------------------------------------------
+
+    image_path = image["image"]
+
+    if image_path.startswith("/static/"):
+
+        file_path = os.path.join(
+            app.root_path,
+            image_path.lstrip("/")
+        )
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+    # ------------------------------------------------------
+    # DELETE IMAGE FROM DATABASE
+    # ------------------------------------------------------
+
+    cursor.execute("""
+        DELETE FROM gallery_images
+        WHERE id = %s
+    """, (image_id,))
+
+    mysql.connection.commit()
+
+    cursor.close()
+
+    flash(
+        "Image deleted successfully!",
+        "success"
+    )
+
+    return redirect(
+        url_for("admin_gallery")
+    )
+
+
+# ==========================================================
 # DELETE ENTIRE GALLERY
 # ==========================================================
 
@@ -2207,7 +2265,9 @@ def admin_delete_gallery(gallery_id):
     if not admin_required():
         return redirect(url_for("admin_login"))
 
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor = mysql.connection.cursor(
+        MySQLdb.cursors.DictCursor
+    )
 
     # ------------------------------------------------------
     # GET ALL IMAGES BELONGING TO THIS GALLERY
@@ -2261,12 +2321,14 @@ def admin_delete_gallery(gallery_id):
 
     cursor.close()
 
-    flash("Gallery deleted successfully!")
+    flash(
+        "Gallery deleted successfully!",
+        "success"
+    )
 
     return redirect(
         url_for("admin_gallery")
     )
-
 
     # ------------------------------------------------------
     # GET IMAGE
